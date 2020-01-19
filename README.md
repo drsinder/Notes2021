@@ -31,3 +31,5 @@ The author of Notes 2021 managed and contributed to the Notes 2 rewrite on NovaN
 A prior effort, 3.0, was written using Microsoft ASP.NET MVC 5.
 Version 2017 was derived from 3.0 but uses a new foundation, ASP.NET CORE 2.2, which permits greater flexibility.
 This version is built on Core 3.1.1.  Notes 2021 also adds the ability to archive notes files (forums).
+
+This is a Visual Studio 2019 project.
