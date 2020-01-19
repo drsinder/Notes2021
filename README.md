@@ -1,4 +1,4 @@
-# Notes2021
+# Notes 2021
 Next iteration of Notes for the web.  Based on PLATO Notes.
 
 Notes2021
