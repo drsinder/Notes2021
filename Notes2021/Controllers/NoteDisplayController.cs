@@ -1247,7 +1247,7 @@ namespace Notes2021.Controllers
                 NoteSubject = nc.NoteSubject,
                 wholestring = false
             };
-            List<NoteHeader> bnhl = await NoteDataManager.GetBaseNoteHeadersForNote(_db, arcId, nc.NoteFileId, nc.NoteOrdinal);
+            List<NoteHeader> bnhl = await NoteDataManager.GetBaseNoteHeadersForNote(_db,  nc.NoteFileId, arcId, nc.NoteOrdinal);
             NoteHeader bnh = bnhl[0];
             model.hasstring = bnh.ResponseCount > 0;
 
