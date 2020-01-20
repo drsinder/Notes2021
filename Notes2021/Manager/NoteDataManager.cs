@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Notes2021.Models;
 using Notes2021.Api;
 using Hangfire;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Notes2021.Manager
 {
@@ -606,7 +607,7 @@ namespace Notes2021.Manager
             nc.NoteFile.NoteHeaders = null;
             ForwardViewModel fv = new ForwardViewModel()
             {
-                NoteSubject = "New Note from Notes 2020"
+                NoteSubject = "New Note from Notes 2021"
             };
             List<Subscription> subs = await db.Subscription
                 .Where(p => p.NoteFileId == nc.NoteFileId)
@@ -632,16 +633,32 @@ namespace Notes2021.Manager
 
                 if (myAccess.ReadAccess)
                 {
-                    //emails.Add(usr.Email);        //TODO
+                    emails.Add((await userManager.FindByIdAsync(usr.UserId)).Email);
                 }
             }
 
             if (emails.Count > 0)
             {
-                string payload = await MakeNoteForEmail(fv, db, "BackgroundJob", "Notes 2020");
-                //await Globals.EmailSender.SendEmailListAsync(emails, fv.NoteSubject, payload);        //TODO
+                string payload = await MakeNoteForEmail(fv, db, "BackgroundJob", "Notes 2021");
+
+                foreach (string em in emails)
+                {
+                    await Globals.EmailSender.SendEmailAsync(em, fv.NoteSubject, payload);
+                }
+
+                //await Globals.EmailSender.SendEmailListAsync(emails, fv.NoteSubject, payload);
             }
         }
+
+        public static async Task<bool> SendNotesAsync(ForwardViewModel fv, ApplicationDbContext db, IEmailSender emailSender,
+                string email, string name)
+        {
+            await emailSender.SendEmailAsync(fv.ToEmail, fv.NoteSubject,
+                await MakeNoteForEmail(fv, db, email, name));
+
+            return true;
+        }
+
 
         private static async Task<string> MakeNoteForEmail(ForwardViewModel fv, ApplicationDbContext db, string email, string name)
         {
@@ -649,7 +666,7 @@ namespace Notes2021.Manager
 
             if (!fv.hasstring || !fv.wholestring)
             {
-                return "Forwarded by Notes 2020 - User: " + email + " / " + name
+                return "Forwarded by Notes 2021 - User: " + email + " / " + name
                     + "<p>File: " + nc.NoteFile.NoteFileName + " - File Title: " + nc.NoteFile.NoteFileTitle + "</p><hr/>"
                     + "<p>Author: " + nc.AuthorName + "  - Director Message: " + nc.NoteContent.DirectorMessage + "</p><p>"
                     + "<p>Subject: " + nc.NoteSubject + "</p>"

@@ -23,18 +23,16 @@
 **--------------------------------------------------------------------------
 */
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Notes2021.Models;
 using Notes2021.Data;
 using Notes2021.Manager;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {
@@ -43,7 +41,7 @@ namespace Notes2021.Controllers
     {
         // ReSharper disable once NotAccessedField.Local
         private readonly UserManager<IdentityUser> _userManager;
- 
+
         private readonly ApplicationDbContext _context;
 
         public DataSpyController(
@@ -51,7 +49,7 @@ namespace Notes2021.Controllers
             SignInManager<IdentityUser> signInManager,
             IEmailSender emailSender,
             ApplicationDbContext context)
-        { 
+        {
             _userManager = userManager;
             _context = context;
         }

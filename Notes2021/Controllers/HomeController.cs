@@ -306,7 +306,7 @@ namespace Notes2021.Controllers
                 ViewData["Stats"] = "Base Notes: " + basenotes + ", Responses: " + (count - basenotes) +
                                     ", Total Notes: " + count;
             }
-            ViewData["Message"] = "About Notes 2020 : " + ViewData["StartupTimeDate"];
+            ViewData["Message"] = "About Notes 2021 : " + ViewData["StartupTimeDate"];
 
             return View();
         }

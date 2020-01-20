@@ -23,22 +23,22 @@
 **--------------------------------------------------------------------------
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Notes2021.Models;
-using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Notes2021.Data;
 using Notes2021.Manager;
-using Microsoft.AspNetCore.Hosting;
+using Notes2021.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {
@@ -313,7 +313,7 @@ namespace Notes2021.Controllers
                 sb.Append("</h2>");
                 sb.Append("<h4>");
                 sb.Append("<a href=\"");
-                sb.Append(Globals.ProductionUrl + "NoteDisplay/Create/" + nf.Id + 
+                sb.Append(Globals.ProductionUrl + "NoteDisplay/Create/" + nf.Id +
                           "\" target=\"_blank\">New Base Note</a>");
                 sb.Append("</h4>");
             }
@@ -597,7 +597,7 @@ namespace Notes2021.Controllers
         /// <returns></returns>
         public async Task<NoteAccess> GetMyAccess(int fileid, ClaimsPrincipal user)
         {
-            NoteAccess noteAccess = await AccessManager.GetAccess(_db, _userManager.GetUserId(user), fileid, 0);  //TODO
+            NoteAccess noteAccess = await AccessManager.GetAccess(_db, _userManager.GetUserId(user), fileid, (int)HttpContext.Session.GetInt32("ArchiveID"));  //TODO??
             ViewData["MyAccess"] = noteAccess;
             return noteAccess;
         }

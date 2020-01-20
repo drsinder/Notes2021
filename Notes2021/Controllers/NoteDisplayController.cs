@@ -738,7 +738,7 @@ namespace Notes2021.Controllers
                         _db.LinkQueue.Add(q);
                         await _db.SaveChangesAsync();
 
-                        LinkProcessor lp = new LinkProcessor(_db);        //TODO
+                        LinkProcessor lp = new LinkProcessor(_db); 
 
                         BackgroundJob.Enqueue(() => lp.ProcessLinkAction(q.Id));
                     }
@@ -1195,7 +1195,7 @@ namespace Notes2021.Controllers
             await _emailSender.SendEmailAsync(id3, "From Notes 2021 - " + nfl.NoteFileName, txt);
 
 
-            //TODO
+            //TODO low priority
 
             //if (id4 && User.IsInRole("Admin"))
             //{
@@ -1272,14 +1272,12 @@ namespace Notes2021.Controllers
 
             //NoteHeader nc = await NoteDataManager.GetNoteByIdWithFile(_db, fv.NoteID);
 
+            UserAuxData user = await _db.UserData.SingleAsync(p => p.UserId == _userManager.GetUserId(User));
+            string userName = user.DisplayName;
 
-            //TODO
+            string userEmail = User.Identity.Name;
 
-            //UserAuxData user = await _db.UserData.SingleAsync(p => p.UserId == _userManager.GetUserId(User));
-            //string userEmail = user.Email;
-            //string userName = user.UserName;
-
-            //await NoteDataManager.SendNotesAsync(fv, _db, _emailSender, userEmail, userName);
+            await NoteDataManager.SendNotesAsync(fv, _db, _emailSender, userEmail, userName);
 
             return RedirectToAction("Display", new { id = fv.NoteID });
         }

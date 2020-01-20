@@ -83,7 +83,7 @@ namespace Notes2021.Controllers
 
         public async Task<IActionResult> CreateAnnounce()
         {
-            await CreateNoteFile("announce", "Notes 2020 Announcements");
+            await CreateNoteFile("announce", "Notes 2021 Announcements");
             NoteFile nf4 = await NoteDataManager.GetFileByName(_db, "announce");
             int padid = nf4.Id;
             NoteAccess access = await AccessManager.GetOneAccess(_db, Globals.AccessOtherId(), padid, 0);
@@ -113,7 +113,7 @@ namespace Notes2021.Controllers
 
         public async Task<IActionResult> CreateNoteshelp()
         {
-            await CreateNoteFile("noteshelp", "Help with Notes 2020");
+            await CreateNoteFile("noteshelp", "Help with Notes 2021");
             NoteFile nf4 = await NoteDataManager.GetFileByName(_db, "noteshelp");
             int padid = nf4.Id;
             NoteAccess access = await AccessManager.GetOneAccess(_db, Globals.AccessOtherId(), padid, 0);
