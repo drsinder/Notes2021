@@ -597,7 +597,7 @@ namespace Notes2021.Controllers
         /// <returns></returns>
         public async Task<NoteAccess> GetMyAccess(int fileid, ClaimsPrincipal user)
         {
-            NoteAccess noteAccess = await AccessManager.GetAccess(_db, _userManager.GetUserId(user), fileid, (int)HttpContext.Session.GetInt32("ArchiveID"));  //TODO??
+            NoteAccess noteAccess = await AccessManager.GetAccess(_db, _userManager.GetUserId(user), fileid, 0); // (int)HttpContext.Session.GetInt32("ArchiveID"));  //TODO??
             ViewData["MyAccess"] = noteAccess;
             return noteAccess;
         }

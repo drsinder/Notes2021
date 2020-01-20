@@ -26,7 +26,7 @@
 body {
     font-family: Courier New, Courier, monospace;
     margin: 8px;
-    background-color:blue;
+    background-color:black;
     color: white;
     font-size-adjust: 0.45;
 }
@@ -39,7 +39,7 @@ h2 {
 h3 {
     color: gold;
     font-size-adjust: 0.3;
-    background-color: blue;
+    background-color: black;
 }
 
 h4 {
@@ -51,7 +51,7 @@ h4 {
 h5 {
     color: gold;
     font-size-adjust: 0.55;
-    background-color: blue;
+    background-color: black;
 
 }
 
