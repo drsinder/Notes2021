@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Notes2021.Manager;
-using Notes2021.Data;
+using Notes2021Lib.Manager;
+using Notes2021Lib.Data;
 
 namespace Notes2021.Api
 {
@@ -43,7 +43,7 @@ namespace Notes2021.Api
                     if (file == null)
                         return "Target file does not exist";
 
-                    if (!await AccessManager.TestLinkAccess(HttpContext, _context, file))
+                    if (!await AccessManager.TestLinkAccess(/*HttpContext,*/ _context, file))
                         return "Access Denied";
                 }
                 catch

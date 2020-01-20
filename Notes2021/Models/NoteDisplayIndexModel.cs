@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 
 namespace Notes2021.Models
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Notes2021.Data.Migrations
+namespace Notes2021Lib.Data.Migrations
 {
     public partial class UserAuxDataAndTZone : Migration
     {

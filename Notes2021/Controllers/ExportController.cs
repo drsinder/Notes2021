@@ -29,7 +29,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Notes2021.Data;
+using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
 using Notes2021.Manager;
 using Notes2021.Models;
 using System;
@@ -65,7 +66,7 @@ namespace Notes2021.Controllers
         public IActionResult Index()
         {
             //string userid = _userManager.GetUserId(User);
-            IEnumerable<SelectListItem> items = NoteDataManager.GetFileNameSelectList(_db);
+            IEnumerable<SelectListItem> items = LocalManager.GetFileNameSelectList(_db);
             List<SelectListItem> list2 = new List<SelectListItem>
             {
                 new SelectListItem
@@ -79,7 +80,7 @@ namespace Notes2021.Controllers
             // create new model and start adding properties
             ExportViewModel it = new ExportViewModel { AFiles = list2 };
             // file name select list
-            items = NoteDataManager.GetFileTitleSelectList(_db);
+            items = LocalManager.GetFileTitleSelectList(_db);
             list2 = new List<SelectListItem>
             {
                 new SelectListItem
@@ -107,9 +108,16 @@ namespace Notes2021.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<FileResult> Index(ExportViewModel model, int arcId)
+        public async Task<FileResult> Index(ExportViewModel model/*, int arcId*/)
         {
-            return File(await DoExport(model, User, arcId), System.Net.Mime.MediaTypeNames.Application.Octet, model.FileName + (model.isHtml ? ".html" : ".txt"));
+            int? arcId = HttpContext.Session.GetInt32("ArchiveID");
+            int arcId2 = 0;
+            if (arcId != null)
+            {
+                arcId2 = (int)arcId;
+            }
+
+            return File(await DoExport(model, User, arcId2), System.Net.Mime.MediaTypeNames.Application.Octet, model.FileName + (model.isHtml ? ".html" : ".txt"));
         }
 
         public async Task<IActionResult> PreExport(int id)
@@ -305,7 +313,7 @@ namespace Notes2021.Controllers
                 sb.Append("<h2>");
 
             // File Header
-            sb.Append("2020 NoteFile " + nf.NoteFileName + " - " + nf.NoteFileTitle);
+            sb.Append("2021 NoteFile " + nf.NoteFileName + " - " + nf.NoteFileTitle);
             sb.Append(" - Created " + DateTime.Now.ToUniversalTime().ToLongDateString() + " " + DateTime.Now.ToUniversalTime().ToShortTimeString());
             sb.Append("   For " + userName);
             if (isHtml)

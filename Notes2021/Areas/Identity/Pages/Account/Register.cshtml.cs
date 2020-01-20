@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 
 namespace Notes2021.Areas.Identity.Pages.Account
 {

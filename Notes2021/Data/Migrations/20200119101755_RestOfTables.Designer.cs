@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 
-namespace Notes2021.Data.Migrations
+namespace Notes2021Lib.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20200119101755_RestOfTables")]
@@ -221,7 +221,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Audit", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Audit", b =>
                 {
                     b.Property<long>("AuditID")
                         .ValueGeneratedOnAdd()
@@ -256,7 +256,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("Audit");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.HomePageMessage", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.HomePageMessage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -276,7 +276,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("HomePageMessage");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.LinkLog", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.LinkLog", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -300,7 +300,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("LinkLog");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.LinkQueue", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.LinkQueue", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -330,7 +330,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("LinkQueue");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.LinkedFile", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.LinkedFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -366,7 +366,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("LinkedFile");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Mark", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Mark", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)")
@@ -399,7 +399,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("Mark");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteAccess", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteAccess", b =>
                 {
                     b.Property<string>("UserID")
                         .HasColumnType("nvarchar(450)")
@@ -439,7 +439,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("NoteAccess");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteContent", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteContent", b =>
                 {
                     b.Property<long>("NoteHeaderId")
                         .HasColumnType("bigint");
@@ -458,7 +458,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("NoteContent");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteFile", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -493,7 +493,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("NoteFile");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteHeader", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteHeader", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -556,7 +556,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("NoteHeader");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.SQLFile", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.SQLFile", b =>
                 {
                     b.Property<long>("FileId")
                         .ValueGeneratedOnAdd()
@@ -587,7 +587,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("SQLFile");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.SQLFileContent", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.SQLFileContent", b =>
                 {
                     b.Property<long>("SQLFileId")
                         .HasColumnType("bigint");
@@ -601,7 +601,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("SQLFileContent");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Search", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Search", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)")
@@ -638,7 +638,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("Search");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Sequencer", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Sequencer", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)")
@@ -666,7 +666,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("Sequencer");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Subscription", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Subscription", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -688,7 +688,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("Subscription");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.TZone", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.TZone", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2558,7 +2558,7 @@ namespace Notes2021.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Tags", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Tags", b =>
                 {
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(30)")
@@ -2584,7 +2584,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.UserAuxData", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.UserAuxData", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)")
@@ -2707,90 +2707,90 @@ namespace Notes2021.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Mark", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Mark", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteFile", "NoteFile")
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
                         .WithMany()
                         .HasForeignKey("NoteFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteAccess", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteAccess", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteFile", "NoteFile")
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
                         .WithMany()
                         .HasForeignKey("NoteFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteContent", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteContent", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteHeader", "NoteHeader")
+                    b.HasOne("Notes2021Lib.Data.NoteHeader", "NoteHeader")
                         .WithOne("NoteContent")
-                        .HasForeignKey("Notes2021.Data.NoteContent", "NoteHeaderId")
+                        .HasForeignKey("Notes2021Lib.Data.NoteContent", "NoteHeaderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteFile", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteFile", b =>
                 {
-                    b.HasOne("Notes2021.Data.UserAuxData", "Owner")
+                    b.HasOne("Notes2021Lib.Data.UserAuxData", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.NoteHeader", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.NoteHeader", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteFile", "NoteFile")
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
                         .WithMany("NoteHeaders")
                         .HasForeignKey("NoteFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.SQLFileContent", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.SQLFileContent", b =>
                 {
-                    b.HasOne("Notes2021.Data.SQLFile", "SQLFile")
+                    b.HasOne("Notes2021Lib.Data.SQLFile", "SQLFile")
                         .WithOne("Content")
-                        .HasForeignKey("Notes2021.Data.SQLFileContent", "SQLFileId")
+                        .HasForeignKey("Notes2021Lib.Data.SQLFileContent", "SQLFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Search", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Search", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteFile", "NoteFile")
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
                         .WithMany()
                         .HasForeignKey("NoteFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Sequencer", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Sequencer", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteFile", "NoteFile")
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
                         .WithMany()
                         .HasForeignKey("NoteFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Subscription", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Subscription", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteFile", "NoteFile")
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
                         .WithMany()
                         .HasForeignKey("NoteFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Notes2021.Data.Tags", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.Tags", b =>
                 {
-                    b.HasOne("Notes2021.Data.NoteHeader", "NoteHeader")
+                    b.HasOne("Notes2021Lib.Data.NoteHeader", "NoteHeader")
                         .WithMany("Tags")
                         .HasForeignKey("NoteHeaderId")
                         .OnDelete(DeleteBehavior.Cascade)

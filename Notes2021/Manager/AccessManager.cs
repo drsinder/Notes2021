@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 using Notes2021;
 using Microsoft.EntityFrameworkCore;
 

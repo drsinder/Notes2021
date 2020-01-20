@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Notes2021.Data;
-using Notes2021.Manager;
+using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
 using System.Linq;
 
 namespace Notes2021.Controllers

@@ -30,7 +30,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Notes2021.Models;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Notes2021.Controllers

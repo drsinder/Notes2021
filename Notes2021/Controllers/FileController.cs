@@ -26,7 +26,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Notes2021.Models;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Notes2021.Controllers

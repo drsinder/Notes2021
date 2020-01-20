@@ -6,10 +6,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\ApplicationDbContext.cs" />
+    <Compile Remove="Data\Audit.cs" />
+    <Compile Remove="Data\HomePageMessage.cs" />
+    <Compile Remove="Data\LinkedFile.cs" />
+    <Compile Remove="Data\LinkLog.cs" />
+    <Compile Remove="Data\LinkQueue.cs" />
+    <Compile Remove="Data\Mark.cs" />
     <Compile Remove="Data\Migrations\20200119084224_UserAuxData.cs" />
     <Compile Remove="Data\Migrations\20200119084224_UserAuxData.Designer.cs" />
     <Compile Remove="Data\Migrations\20200119085002_UserAuxDataAndTZone.cs" />
     <Compile Remove="Data\Migrations\20200119085002_UserAuxDataAndTZone.Designer.cs" />
+    <Compile Remove="Data\NoteAccess.cs" />
+    <Compile Remove="Data\NoteContent.cs" />
+    <Compile Remove="Data\NoteFile.cs" />
+    <Compile Remove="Data\NoteHeader.cs" />
+    <Compile Remove="Data\Search.cs" />
+    <Compile Remove="Data\Sequencer.cs" />
+    <Compile Remove="Data\SQLFile.cs" />
+    <Compile Remove="Data\Subscription.cs" />
+    <Compile Remove="Data\SystemMessage.cs" />
+    <Compile Remove="Data\Tags.cs" />
+    <Compile Remove="Data\TZone.cs" />
+    <Compile Remove="Data\UserAuxData.cs" />
+    <Compile Remove="Manager\AccessManager.cs" />
+    <Compile Remove="Manager\NoteDataManager.cs" />
+    <Compile Remove="Models\CopyViewModel.cs" />
+    <Compile Remove="Models\ForwardViewModel.cs" />
+    <Compile Remove="Models\NoteDisplayViewModel1.cs" />
+    <Compile Remove="Models\NoteXModel.cs" />
+    <Compile Remove="Models\TextViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -225,6 +251,11 @@
     <PackageReference Include="PusherServer" Version="4.2.0" />
     <PackageReference Include="SendGrid" Version="9.12.5" />
     <PackageReference Include="TinyMCE" Version="5.1.5" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Notes2021Lib\Notes2021Lib.csproj" />
   </ItemGroup>
 
 </Project>

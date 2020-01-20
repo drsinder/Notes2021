@@ -32,9 +32,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using Notes2021.Models;
-using Notes2021.Data;
-using Notes2021.Manager;
+using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
 using Microsoft.AspNetCore.Http;
+using Notes2021.Manager;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -78,7 +79,7 @@ namespace Notes2021.Controllers
                 await _roleManager.CreateAsync(new IdentityRole { Name = "Admin" });
             }
 
-            TZone tzone = await NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
+            TZone tzone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
 
             HomePageModel myModel = new HomePageModel
             {
@@ -163,14 +164,14 @@ namespace Notes2021.Controllers
                     .ToListAsync();
 
                 // Get a list of all file names for dropdown
-                IEnumerable<SelectListItem> items = NoteDataManager.GetFileNameSelectList(_db);
+                IEnumerable<SelectListItem> items = LocalManager.GetFileNameSelectList(_db);
                 List<SelectListItem> list2 = new List<SelectListItem>();
                 list2.AddRange(items);
 
                 myModel.AFiles = list2;
 
                 // Get a list of all file titles for dropdown
-                items = NoteDataManager.GetFileTitleSelectList(_db);
+                items = LocalManager.GetFileTitleSelectList(_db);
                 list2 = new List<SelectListItem>();
                 list2.AddRange(items);
                 myModel.ATitles = list2;
@@ -285,7 +286,7 @@ namespace Notes2021.Controllers
             ViewData["Stats"] = "";
             if (_signInManager.IsSignedIn(User))
             {
-                TZone tzone = NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db)
+                TZone tzone = LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db)
                     .GetAwaiter().GetResult();
 
                 ViewData["StartupTimeDate"] = "Startup Time " +

@@ -34,7 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using Microsoft.Net.Http.Headers;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 using Microsoft.EntityFrameworkCore;
 
 // ReSharper disable PossibleNullReferenceException

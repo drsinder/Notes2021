@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 
 [assembly: HostingStartup(typeof(Notes2021.Areas.Identity.IdentityHostingStartup))]
 namespace Notes2021.Areas.Identity

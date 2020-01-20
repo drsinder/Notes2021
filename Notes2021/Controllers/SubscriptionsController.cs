@@ -28,10 +28,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Notes2021Lib.Manager;
 using Notes2021.Manager;
 
 namespace Notes2021.Controllers
@@ -82,7 +83,7 @@ namespace Notes2021.Controllers
             ViewBag.Db = _context;
             ViewBag.UserID = _userManager.GetUserId(User);
 
-            IEnumerable<SelectListItem> files = NoteDataManager.GetFileNameSelectListWithId(_context);
+            IEnumerable<SelectListItem> files = LocalManager.GetFileNameSelectListWithId(_context);
             List<SelectListItem> list2 = new List<SelectListItem>
             {
                 new SelectListItem {Value = "", Text = "-- Select a File --"}
@@ -110,7 +111,7 @@ namespace Notes2021.Controllers
             ViewBag.Db = _context;
             ViewBag.UserID = _userManager.GetUserId(User);
 
-            IEnumerable<SelectListItem> files = NoteDataManager.GetFileNameSelectListWithId(_context);
+            IEnumerable<SelectListItem> files = LocalManager.GetFileNameSelectListWithId(_context);
             ViewBag.FilesList = files;
 
             return View(subscription);

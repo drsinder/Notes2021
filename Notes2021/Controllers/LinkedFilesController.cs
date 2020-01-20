@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Notes2021.Api;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 using Notes2021.Models;
 
 namespace Notes2021.Controllers

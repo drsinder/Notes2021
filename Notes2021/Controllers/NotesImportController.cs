@@ -30,10 +30,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Notes2021.Manager;
+using Notes2021Lib.Manager;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 
 namespace Notes2021.Controllers
 {
@@ -136,7 +136,7 @@ namespace Notes2021.Controllers
                 {
                     if (counter == 0)
                     {
-                        if (line.StartsWith("NoteFile "))  // By this we know it came from Notes 3.1
+                        if (line.StartsWith("2021 NoteFile "))  // By this we know it came from Notes 3.1
                         {
                             filetype = 1;   // Notes 3.1
                             await file.ReadLineAsync();

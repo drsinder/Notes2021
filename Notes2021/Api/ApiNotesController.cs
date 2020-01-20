@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Notes2021.Manager;
-using Notes2021.Data;
+using Notes2021Lib.Manager;
+using Notes2021Lib.Data;
 
 namespace Notes2021.Api
 {

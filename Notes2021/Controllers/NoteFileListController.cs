@@ -30,8 +30,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Notes2021Lib.Manager;
+using Notes2021Lib.Data;
 using Notes2021.Manager;
-using Notes2021.Data;
 
 namespace Notes2021.Controllers
 {
@@ -57,7 +58,7 @@ namespace Notes2021.Controllers
         {
             HttpContext.Session.SetInt32("IsSearch", 0);
 
-            TZone tz = await NoteDataManager.GetUserTimeZone(Request.HttpContext, User, _userManager, _signInManager, _db);
+            TZone tz = await LocalManager.GetUserTimeZone(Request.HttpContext, User, _userManager, _signInManager, _db);
             ViewBag.TZ = tz;
 
             List<NoteFile> nf = await NoteDataManager.GetNoteFilesOrderedByName(_db);
@@ -82,7 +83,7 @@ namespace Notes2021.Controllers
                 return NotFound();
             }
 
-            TZone tz = await NoteDataManager.GetUserTimeZone(Request.HttpContext, User, _userManager, _signInManager, _db);
+            TZone tz = await LocalManager.GetUserTimeZone(Request.HttpContext, User, _userManager, _signInManager, _db);
             ViewBag.TZ = tz;
 
             ViewBag.BaseNotes = await NoteDataManager.NextBaseNoteOrdinal(_db, (int)id, 0) - 1;

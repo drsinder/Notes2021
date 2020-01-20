@@ -31,8 +31,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Notes2021.Manager;
-using Notes2021.Data;
+using Notes2021Lib.Manager;
+using Notes2021Lib.Data;
 
 namespace Notes2021.Controllers
 {

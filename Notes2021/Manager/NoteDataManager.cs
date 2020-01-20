@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Notes2021.Models;

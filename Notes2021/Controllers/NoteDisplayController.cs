@@ -39,10 +39,12 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 //using Notes2020.Api;
 using Notes2021.Models;
+using Notes2021Lib.Models;
 using Notes2021.Api;
-using Notes2021.Data;
-using Notes2021.Manager;
+using Notes2021Lib.Manager;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Notes2021Lib.Data;
+using Notes2021.Manager;
 
 namespace Notes2021.Controllers
 {
@@ -308,7 +310,7 @@ namespace Notes2021.Controllers
             idxModel.myAccess = myacc;
             idxModel.ExpandOrdinal = 0;
 
-            idxModel.tZone = await NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
+            idxModel.tZone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
             Mark mark = await _db.Mark.Where(p => p.UserId == _userManager.GetUserId(User)).FirstOrDefaultAsync();
             idxModel.isMarked = (mark != null);
 
@@ -398,7 +400,7 @@ namespace Notes2021.Controllers
 
             idxModel.rPath = Request.PathBase;
 
-            idxModel.tZone = await NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
+            idxModel.tZone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
 
             idxModel.Expanded = await NoteDataManager.GetBaseNoteAndResponses(_db, idxModel.noteFile.Id, arcId, idxModel.ExpandOrdinal);
 
@@ -456,7 +458,7 @@ namespace Notes2021.Controllers
             else
                 model.IsSeq = false;
 
-            model.tZone = await NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
+            model.tZone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
 
             int? menu = HttpContext.Session.GetInt32("HideNoteMenu");
             ViewBag.HideNoteMenu = false;
@@ -1277,7 +1279,7 @@ namespace Notes2021.Controllers
 
             string userEmail = User.Identity.Name;
 
-            await NoteDataManager.SendNotesAsync(fv, _db, _emailSender, userEmail, userName);
+            await NoteDataManager.SendNotesAsync(fv, _db, _emailSender, userEmail, userName, Globals.ProductionUrl);
 
             return RedirectToAction("Display", new { id = fv.NoteID });
         }
@@ -1460,7 +1462,7 @@ namespace Notes2021.Controllers
         {
             NoteHeader nc = await NoteDataManager.GetNoteById(_db, id);
 
-            TZone tzone = await NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
+            TZone tzone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
 
             //Setup a Search Object with defaults
             Search search = new Search()
@@ -1468,7 +1470,7 @@ namespace Notes2021.Controllers
                 BaseOrdinal = nc.NoteOrdinal,
                 NoteFileId = nc.NoteFileId,
                 NoteID = nc.Id,
-                Option = Notes2021.Data.SearchOption.Content,
+                Option = Notes2021Lib.Data.SearchOption.Content,
                 ResponseOrdinal = nc.ResponseOrdinal,
                 Time = tzone.Local(DateTime.Now.ToUniversalTime()),
                 UserId = _userManager.GetUserId(User)
@@ -1534,18 +1536,18 @@ namespace Notes2021.Controllers
             search.UserId = _userManager.GetUserId(User);
             if (ModelState.IsValid)
             {
-                TZone tzone = await NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
+                TZone tzone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
 
                 if (!string.IsNullOrEmpty(search.Text))
                 {
                     search.Text = search.Text.ToLower();
-                    if (search.Option == Notes2021.Data.SearchOption.Tag)
+                    if (search.Option == Notes2021Lib.Data.SearchOption.Tag)
                         search.Text = search.Text.Trim();
                 }
 
                 HttpContext.Session.SetInt32("IsTagSearch", 0);
 
-                if (search.Option == Notes2021.Data.SearchOption.Tag)
+                if (search.Option == Notes2021Lib.Data.SearchOption.Tag)
                 {
                     List<long> taggedIds = await MakeTagSearchResultsList(search);
                     if (taggedIds != null && taggedIds.Count > 0)
@@ -1654,7 +1656,7 @@ namespace Notes2021.Controllers
                 await _db.SaveChangesAsync();
             }
 
-            TZone tzone = await NoteDataManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
+            TZone tzone = await LocalManager.GetUserTimeZone(HttpContext, User, _userManager, _signInManager, _db);
 
             // perform continued search
             Search newSpecs = await DoSearch(search, tzone);
@@ -1697,7 +1699,7 @@ namespace Notes2021.Controllers
             // we can search in a number of ways.  check the ONE the user selected
             switch (sv.Option)
             {
-                case Notes2021.Data.SearchOption.Author:
+                case Notes2021Lib.Data.SearchOption.Author:
 
                     if (nc.AuthorName.ToLower().Contains(sv.Text))
                     {
@@ -1707,7 +1709,7 @@ namespace Notes2021.Controllers
                     }
                     return sv;
 
-                case Notes2021.Data.SearchOption.Content:
+                case Notes2021Lib.Data.SearchOption.Content:
                     if (nc.NoteContent.NoteBody.ToLower().Contains(sv.Text))
                     {
                         Search x = sv.Clone(sv);
@@ -1716,7 +1718,7 @@ namespace Notes2021.Controllers
                     }
                     return sv;
 
-                case Notes2021.Data.SearchOption.Tag:
+                case Notes2021Lib.Data.SearchOption.Tag:
                     if (nc.Tags != null && nc.Tags.Count > 0)
                     {
                         foreach ( Tags item in nc.Tags)
@@ -1731,7 +1733,7 @@ namespace Notes2021.Controllers
                     }
                     return sv;
 
-                case Notes2021.Data.SearchOption.DirMess:
+                case Notes2021Lib.Data.SearchOption.DirMess:
                     if (nc.NoteContent.DirectorMessage.ToLower().Contains(sv.Text))
                     {
                         Search x = sv.Clone(sv);
@@ -1740,7 +1742,7 @@ namespace Notes2021.Controllers
                     }
                     return sv;
 
-                case Notes2021.Data.SearchOption.Title:
+                case Notes2021Lib.Data.SearchOption.Title:
                     if (nc.NoteSubject.ToLower().Contains(sv.Text))
                     {
                         Search x = sv.Clone(sv);
@@ -1749,7 +1751,7 @@ namespace Notes2021.Controllers
                     }
                     return sv;
 
-                case Notes2021.Data.SearchOption.TimeIsAfter:
+                case Notes2021Lib.Data.SearchOption.TimeIsAfter:
                     if (tzone.Local(nc.LastEdited) >= sv.Time)
                     {
                         Search x = sv.Clone(sv);
@@ -1758,7 +1760,7 @@ namespace Notes2021.Controllers
                     }
                     return sv;
 
-                case Notes2021.Data.SearchOption.TimeIsBefore:
+                case Notes2021Lib.Data.SearchOption.TimeIsBefore:
                     if (tzone.Local(nc.LastEdited) <= sv.Time)
                     {
                         Search x = sv.Clone(sv);

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Notes2021.Data;
+using Notes2021Lib.Data;
 
-namespace Notes2021.Data.Migrations
+namespace Notes2021Lib.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20200119085312_UserAuxDataAndTZone")]
@@ -221,7 +221,7 @@ namespace Notes2021.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Notes2021.Data.TZone", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.TZone", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2091,7 +2091,7 @@ namespace Notes2021.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Notes2021.Data.UserAuxData", b =>
+            modelBuilder.Entity("Notes2021Lib.Data.UserAuxData", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)")
