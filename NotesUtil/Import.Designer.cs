@@ -45,6 +45,7 @@
             this.comboBox1.Size = new System.Drawing.Size(299, 28);
             this.comboBox1.TabIndex = 0;
             this.comboBox1.Text = "Choose Note File to Import to";
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             this.comboBox1.Layout += new System.Windows.Forms.LayoutEventHandler(this.comboBox1_Layout);
             // 
             // textBox1
@@ -113,7 +114,7 @@
             this.Controls.Add(this.textBox1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Name = "Import";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import";
             this.ResumeLayout(false);
             this.PerformLayout();

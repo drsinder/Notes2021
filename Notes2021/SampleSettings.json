@@ -18,9 +18,9 @@
     }
   },
   "Pusher": {
-    "AppId": "455797",
-    "AppKey": "3636343b0f3709af41",
-    "AppSecret": "735657476d3d23e0c7834",
+    "AppId": "xxxxx97",
+    "AppKey": "xxxxxb0f3709af41",
+    "AppSecret": "xxxx6d3d23e0c7834",
     "Cluster": "us2"
   },
   "ChatKit": {

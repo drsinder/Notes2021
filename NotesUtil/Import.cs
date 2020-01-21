@@ -35,11 +35,16 @@ namespace NotesUtil
 
             ApplicationDbContext _db = new ApplicationDbContext(optionsBuilder.Options);
 
-            List<NoteFile> nfl = await _db.NoteFile.ToListAsync();
-            
-            foreach (NoteFile nf in nfl)
+            List<NoteFile> nfl = await _db.NoteFile
+                .OrderBy(p => p.NoteFileName)
+                .ToListAsync();
+
+            if (comboBox1.Items.Count == 0)
             {
-                comboBox1.Items.Add(nf.NoteFileName);
+                foreach (NoteFile nf in nfl)
+                {
+                    comboBox1.Items.Add(nf.NoteFileName);
+                }
             }
 
         }
@@ -122,6 +127,11 @@ namespace NotesUtil
 
                 }
             }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

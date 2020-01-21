@@ -156,6 +156,8 @@ namespace Notes2021Lib.Import
                                         await NoteDataManager.CreateResponse(_db, null, makeHeader, newContent.NoteBody, string.Empty, newContent.DirectorMessage, false, false);
                                     }
                                 }
+                                //newContent.Dispose();
+                                //makeHeader.Dispose();
                                 newContent = new NoteContent();
                                 makeHeader = new NoteHeader { NoteFileId = noteFile.Id };
 
@@ -278,6 +280,8 @@ namespace Notes2021Lib.Import
                                         await NoteDataManager.CreateResponse(_db, null, makeHeader, newContent.NoteBody, string.Empty, newContent.DirectorMessage, false, false);
                                     }
                                 }
+                                //newContent.Dispose();
+                                //makeHeader.Dispose();
                                 newContent = new NoteContent();
                                 makeHeader = new NoteHeader { NoteFileId = noteFile.Id };
 
@@ -382,6 +386,8 @@ namespace Notes2021Lib.Import
                                     await NoteDataManager.CreateResponse(_db, null, makeHeader, newContent.NoteBody, string.Empty, newContent.DirectorMessage, false, false);
                                 }
                             }
+                            //newContent.Dispose();
+                            //makeHeader.Dispose();
                             newContent = new NoteContent();
                             makeHeader = new NoteHeader { NoteFileId = noteFile.Id };
 
