@@ -34,15 +34,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
-namespace NotesImport
+namespace NotesUtil
 {
     class Importer
     {
         private const char Ff = (char)(12); //  FF
 
-        public async Task<bool> Import(string myFile, string myNotes)
+        public async Task<bool> Import(string myFile, string myNotes, TextBox textbox)
         {
+
+            textbox.Text = "";
+
             StreamReader file;
             try
             {
@@ -50,7 +54,6 @@ namespace NotesImport
             }
             catch
             {
-                Console.WriteLine(myFile + " not found!");
                 return false;
             }
 
@@ -152,7 +155,7 @@ namespace NotesImport
 
                                         if (basenotes % 10 == 0)
                                         {
-                                            Console.WriteLine("Base notes: " + basenotes);
+                                            textbox.Text += ("\n\r   Base notes: " + basenotes);
                                         }
 
                                     }
@@ -274,7 +277,7 @@ namespace NotesImport
 
                                         if (basenotes % 10 == 0)
                                         {
-                                            Console.WriteLine("Base notes: " + basenotes);
+                                            textbox.Text += ("\n\r   Base notes: " + basenotes);
                                         }
 
                                     }
@@ -378,7 +381,7 @@ namespace NotesImport
 
                                     if (basenotes % 10 == 0)
                                     {
-                                        Console.WriteLine("Base notes: " + basenotes);
+                                        textbox.Text += ("\n\r   Base notes: " + basenotes);
                                     }
 
                                 }
@@ -571,6 +574,9 @@ namespace NotesImport
             noteFile.NumberArchives = numberArchives;
             _db.Update(noteFile);
             _db.SaveChanges();
+
+            textbox.Text += "\n\r   Completed!";
+
 
             return true;
         }

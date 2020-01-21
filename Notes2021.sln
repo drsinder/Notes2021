@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "License", "License", "{06A4
 		License.txt = License.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesUtil", "NotesUtil\NotesUtil.csproj", "{0F3AAB5B-F3EB-47D4-92C5-557A6645722B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{4998AFD0-F9F6-4633-88AC-1F40E7C33D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4998AFD0-F9F6-4633-88AC-1F40E7C33D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4998AFD0-F9F6-4633-88AC-1F40E7C33D98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F3AAB5B-F3EB-47D4-92C5-557A6645722B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F3AAB5B-F3EB-47D4-92C5-557A6645722B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F3AAB5B-F3EB-47D4-92C5-557A6645722B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F3AAB5B-F3EB-47D4-92C5-557A6645722B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
