@@ -100,7 +100,17 @@ namespace NotesUtil
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = "c:\\";
+                string startDir = "C:\\";
+                string configDir = null;
+
+                IConfiguration config = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json", true, true)
+                    .Build();
+                configDir = config["StartDirectory"];
+                if (!string.IsNullOrEmpty(configDir))
+                    startDir = configDir;
+
+                openFileDialog.InitialDirectory = startDir;
                 openFileDialog.Filter = "txt files (*.txt)|*.txt";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
