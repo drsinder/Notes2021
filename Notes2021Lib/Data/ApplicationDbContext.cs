@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Notes2021Lib.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public partial class ApplicationDbContext : IdentityDbContext
     {
 
         public DbSet<UserAuxData> UserData { get; set; }
@@ -29,6 +29,11 @@ namespace Notes2021Lib.Data
         public DbSet<SQLFile> SQLFile { get; set; }
         public DbSet<SQLFileContent> SQLFileContent { get; set; }
 
+        public void AddJsonFile(string v, bool optional)
+        {
+            throw new NotImplementedException();
+        }
+
         public DbSet<LinkedFile> LinkedFile { get; set; }
         public DbSet<LinkQueue> LinkQueue { get; set; }
         public DbSet<LinkLog> LinkLog { get; set; }
@@ -38,7 +43,6 @@ namespace Notes2021Lib.Data
             : base(options)
         {
         }
-
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

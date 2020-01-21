@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Notes2021Lib.Data;
 
-namespace Notes2021Lib.Data.Migrations
+namespace Notes2021.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200119085312_UserAuxDataAndTZone")]
-    partial class UserAuxDataAndTZone
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,12 +162,10 @@ namespace Notes2021Lib.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -206,12 +202,10 @@ namespace Notes2021Lib.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -219,6 +213,473 @@ namespace Notes2021Lib.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Audit", b =>
+                {
+                    b.Property<long>("AuditID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<DateTime>("EventTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("AuditID");
+
+                    b.ToTable("Audit");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.HomePageMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<DateTime>("Posted")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HomePageMessage");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.LinkLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LinkLog");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.LinkQueue", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Activity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BaseUri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Enqueued")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LinkGuid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("LinkedFileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LinkQueue");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.LinkedFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("AcceptFrom")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("HomeFileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HomeFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("RemoteBaseUri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<string>("RemoteFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<bool>("SendTo")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LinkedFile");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Mark", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("NoteFileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MarkOrdinal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArchiveId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("NoteHeaderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("NoteOrdinal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ResponseOrdinal")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "NoteFileId", "MarkOrdinal");
+
+                    b.HasIndex("NoteFileId");
+
+                    b.HasIndex("UserId", "NoteFileId");
+
+                    b.ToTable("Mark");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteAccess", b =>
+                {
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("NoteFileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArchiveId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("DeleteEdit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EditAccess")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReadAccess")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Respond")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("SetTag")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ViewAccess")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Write")
+                        .HasColumnType("bit");
+
+                    b.HasKey("UserID", "NoteFileId", "ArchiveId");
+
+                    b.HasIndex("NoteFileId");
+
+                    b.ToTable("NoteAccess");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteContent", b =>
+                {
+                    b.Property<long>("NoteHeaderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DirectorMessage")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("NoteBody")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100000);
+
+                    b.HasKey("NoteHeaderId");
+
+                    b.ToTable("NoteContent");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("LastEdited")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NoteFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("NoteFileTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<int>("NumberArchives")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("NoteFile");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteHeader", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ArchiveId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AuthorID")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<long>("BaseNoteId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastEdited")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LinkGuid")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("NoteFileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoteOrdinal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NoteSubject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<int>("ResponseCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ResponseOrdinal")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ThreadLastEdited")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LinkGuid");
+
+                    b.HasIndex("NoteFileId");
+
+                    b.HasIndex("NoteFileId", "ArchiveId");
+
+                    b.ToTable("NoteHeader");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.SQLFile", b =>
+                {
+                    b.Property<long>("FileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Contributor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
+
+                    b.HasKey("FileId");
+
+                    b.ToTable("SQLFile");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.SQLFileContent", b =>
+                {
+                    b.Property<long>("SQLFileId")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("SQLFileId");
+
+                    b.ToTable("SQLFileContent");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Search", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("ArchiveId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BaseOrdinal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoteFileId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("NoteID")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Option")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ResponseOrdinal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("NoteFileId");
+
+                    b.ToTable("Search");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Sequencer", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("NoteFileId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Ordinal")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "NoteFileId");
+
+                    b.HasIndex("NoteFileId");
+
+                    b.ToTable("Sequencer");
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Subscription", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NoteFileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubscriberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NoteFileId");
+
+                    b.ToTable("Subscription");
                 });
 
             modelBuilder.Entity("Notes2021Lib.Data.TZone", b =>
@@ -2091,6 +2552,32 @@ namespace Notes2021Lib.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Notes2021Lib.Data.Tags", b =>
+                {
+                    b.Property<string>("Tag")
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<long>("NoteHeaderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ArchiveId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoteFileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Tag", "NoteHeaderId");
+
+                    b.HasIndex("NoteFileId");
+
+                    b.HasIndex("NoteHeaderId");
+
+                    b.HasIndex("NoteFileId", "ArchiveId");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("Notes2021Lib.Data.UserAuxData", b =>
                 {
                     b.Property<string>("UserId")
@@ -2098,6 +2585,7 @@ namespace Notes2021Lib.Data.Migrations
                         .HasMaxLength(450);
 
                     b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -2209,6 +2697,96 @@ namespace Notes2021Lib.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Mark", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
+                        .WithMany()
+                        .HasForeignKey("NoteFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteAccess", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
+                        .WithMany()
+                        .HasForeignKey("NoteFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteContent", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteHeader", "NoteHeader")
+                        .WithOne("NoteContent")
+                        .HasForeignKey("Notes2021Lib.Data.NoteContent", "NoteHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteFile", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.UserAuxData", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.NoteHeader", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
+                        .WithMany("NoteHeaders")
+                        .HasForeignKey("NoteFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.SQLFileContent", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.SQLFile", "SQLFile")
+                        .WithOne("Content")
+                        .HasForeignKey("Notes2021Lib.Data.SQLFileContent", "SQLFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Search", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
+                        .WithMany()
+                        .HasForeignKey("NoteFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Sequencer", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
+                        .WithMany()
+                        .HasForeignKey("NoteFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Subscription", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteFile", "NoteFile")
+                        .WithMany()
+                        .HasForeignKey("NoteFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Notes2021Lib.Data.Tags", b =>
+                {
+                    b.HasOne("Notes2021Lib.Data.NoteHeader", "NoteHeader")
+                        .WithMany("Tags")
+                        .HasForeignKey("NoteHeaderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

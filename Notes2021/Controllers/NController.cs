@@ -137,7 +137,14 @@ namespace Notes2021.Controllers
             {
                 if (_signInManager.IsSignedIn(User))
                 {
-                    IdentityUser user = await userManager.Users.SingleAsync(p => p.Id == userManager.GetUserId(User));
+                    try
+                    {
+                        IdentityUser user = await userManager.Users.SingleAsync(p => p.Id == userManager.GetUserId(User));
+                    }
+                    catch
+                    {
+                        goto gone;
+                    }
                     UserAuxData appUser;
                     string userid = _userManager.GetUserId(User);
                     appUser = await  _db.UserData.SingleOrDefaultAsync(p => p.UserId == userid);
@@ -154,6 +161,7 @@ namespace Notes2021.Controllers
                     }
                 }
             }
+        gone:;
         }
 
     }

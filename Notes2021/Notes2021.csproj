@@ -13,10 +13,16 @@
     <Compile Remove="Data\LinkLog.cs" />
     <Compile Remove="Data\LinkQueue.cs" />
     <Compile Remove="Data\Mark.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
     <Compile Remove="Data\Migrations\20200119084224_UserAuxData.cs" />
     <Compile Remove="Data\Migrations\20200119084224_UserAuxData.Designer.cs" />
     <Compile Remove="Data\Migrations\20200119085002_UserAuxDataAndTZone.cs" />
     <Compile Remove="Data\Migrations\20200119085002_UserAuxDataAndTZone.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200119085312_UserAuxDataAndTZone.cs" />
+    <Compile Remove="Data\Migrations\20200119085312_UserAuxDataAndTZone.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200119101755_RestOfTables.cs" />
+    <Compile Remove="Data\Migrations\20200119101755_RestOfTables.Designer.cs" />
     <Compile Remove="Data\NoteAccess.cs" />
     <Compile Remove="Data\NoteContent.cs" />
     <Compile Remove="Data\NoteFile.cs" />
@@ -256,6 +262,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Notes2021Lib\Notes2021Lib.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NotesImport": {
+      "commandName": "Project",
+      "commandLineArgs": "E:\\ImportFiles\\padofold.txt padofold"
+    }
+  }
+}
