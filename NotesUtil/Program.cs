@@ -20,4 +20,14 @@ namespace NotesUtil
             Application.Run(new OptionsMenu());
         }
     }
+
+    public partial class Importer : Notes2021Lib.Import.Importer
+    {
+        public static TextBox myTextBox;
+        public override void Output(string message)
+        {
+            myTextBox.Text += "   " + message;
+        }
+    }
+
 }

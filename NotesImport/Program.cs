@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Notes2021Lib.Data;
+using System;
 using System.Threading.Tasks;
 
 namespace NotesImport
@@ -18,9 +21,27 @@ namespace NotesImport
 
             Importer imp = new Importer();
 
-             await imp.Import(myFile, myNotes);
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            optionsBuilder.UseSqlServer(config["ConnectionString"]);
+
+            ApplicationDbContext _db = new ApplicationDbContext(optionsBuilder.Options);
+
+            await imp.Import(_db, myFile, myNotes);
 
 
         }
     }
+
+    public partial class Importer : Notes2021Lib.Import.Importer
+    {
+        public override void Output(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+
 }

@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace NotesUtil
 {
     public static class Globals

@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+
 namespace NotesUtil
 {
     public partial class Import : Form
@@ -51,6 +53,8 @@ namespace NotesUtil
             string notefilename = comboBox1.SelectedItem.ToString();
             string filename = textBox1.Text;
 
+            Importer.myTextBox = textBox2;
+
             IConfiguration config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
@@ -75,6 +79,7 @@ namespace NotesUtil
             }
             catch
             {
+                
                 textBox2.Text = ("File " + filename + " not found!");
                 return;
             }
@@ -85,10 +90,11 @@ namespace NotesUtil
 
 
             Importer imp = new Importer();
-            imp.Import(filename, notefilename, textBox2);
-            //imp.Import(filename, notefilename, textBox2).GetAwaiter().GetResult();
+           
+            imp.Import(_db, filename, notefilename);
 
             //button1.Enabled = true;
         }
     }
 }
+

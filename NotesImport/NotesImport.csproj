@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Remove="ApplicationDbContextFactory.cs" />
+    <Compile Remove="Importer.cs" />
   </ItemGroup>
 
   <ItemGroup>
