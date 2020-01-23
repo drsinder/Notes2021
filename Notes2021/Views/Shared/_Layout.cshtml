@@ -65,7 +65,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
                         </li>
                         <li class="nav-item">
-                            <a id="usercount" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users"></a>
+                            <a id="usercount" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Test</a>
                         </li>
                     </ul>
                 </div>
@@ -147,18 +147,15 @@
 
             <script>
             function showUsers() {
-                document.getElementById('usercount').innerHTML =
-                    '<a href="' + '@ViewBag.PathBase' + '/Home/Users/" >Users: ' + membercount + '</a>';
+                document.getElementById('usercount').innerHTML = '<a href="' + '@ViewBag.PathBase' + '/Home/Users/" >Users: ' + membercount + '</a>';
             }
 
             function add_member(userid, userinfo) {
-// ReSharper disable once AssignToImplicitGlobalInFunctionScope
                 membercount = membercount + 1;
                 showUsers();
             }
 
             function remove_member(userid, userinfo) {
-// ReSharper disable once AssignToImplicitGlobalInFunctionScope
                 membercount = membercount - 1;
                 showUsers();
             }

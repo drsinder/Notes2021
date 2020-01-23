@@ -375,6 +375,57 @@ namespace Notes2021.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult PusherAuth(string channelNameX, string socketIdX)
+        {
+            Request.Form.TryGetValue("socket_id", out var socketId);
+            Request.Form.TryGetValue("channel_name", out var channelNames);
+
+            //if (channelName == null)
+            //    return new OkResult();
+
+            var channelName = channelNames[0];
+            {
+                var options = new PusherOptions
+                {
+                    Encrypted = true,
+                    Cluster = Globals.PusherCluster
+                };
+                var pusher = new Pusher(Globals.PusherAppId, Globals.PusherKey, Globals.PusherSecret, options);
+
+                if (!_signInManager.IsSignedIn(User))
+                    return new UnauthorizedResult();
+
+                if (channelName.StartsWith("private-"))
+                {
+                    var auth = pusher.Authenticate(channelName, socketId);
+                    var json = auth.ToJson();
+                    return new ContentResult { Content = json, ContentType = "application/json" };
+                }
+
+                //else if (channelName.StartsWith("presence-"))
+                {
+                    string prefix = Request.IsHttps ? "https://" : "http://";
+                    var channelData = new PresenceChannelData()
+                    {
+                        user_id = _userManager.GetUserId(User),
+                        user_info = new
+                        {
+                            name = NoteDataManager.GetSafeUserDisplayName(_userManager, User, _db),
+                            host_name = Environment.MachineName,
+                            base_url = prefix + Request.Host.Value
+                        }
+                    };
+
+                    var auth = pusher.Authenticate(channelName, socketId, channelData);
+                    var json = auth.ToJson();
+                    return new ContentResult { Content = json, ContentType = "application/json" };
+                }
+            }
+
+            // should never happen
+            //return new OkResult();
+        }
 
 
 

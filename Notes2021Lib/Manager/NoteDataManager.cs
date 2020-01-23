@@ -124,7 +124,7 @@ namespace Notes2021Lib.Manager
         /// <param name="db">ApplicationDbContext</param>
         /// <param name="id">NoteFileID</param>
         /// <returns></returns>
-        public static async Task<bool> DeleteNoteFile(ApplicationDbContext db, int id, int arcId)
+        public static async Task<bool> DeleteNoteFile(ApplicationDbContext db, int id)
         {
             // Things to delete:
             // 1)  X Entries in NoteContent
@@ -159,19 +159,23 @@ namespace Notes2021Lib.Manager
             //_db.Mark.RemoveRange(marks);
             //_db.SearchView.RemoveRange(sv);
 
-            List<NoteAccess> na = await AccessManager.GetAccessListForFile(db, id, arcId);
-            db.NoteAccess.RemoveRange(na);
+            NoteFile noteFile = await db.NoteFile
+               .Where(p => p.Id == id)
+               .FirstAsync();
+
+            for (int arcId = 0; arcId <= noteFile.NumberArchives; arcId++)
+            {
+                List<NoteAccess> na = await AccessManager.GetAccessListForFile(db, id, arcId);
+                db.NoteAccess.RemoveRange(na);
+            }
 
             List<Subscription> subs = await db.Subscription
                 .Where(p => p.NoteFileId == id)
                 .ToListAsync();
             db.Subscription.RemoveRange(subs);
 
-            NoteFile noteFile = await db.NoteFile
-                .Where(p => p.Id == id)
-                .FirstAsync();
             db.NoteFile.Remove(noteFile);
-
+            
             await db.SaveChangesAsync();
 
             return true;

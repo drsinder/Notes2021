@@ -116,7 +116,7 @@ namespace Notes2021
 
             UpdateDatabase(app);
 
-            if (env.IsDevelopment())
+            if (true || env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();

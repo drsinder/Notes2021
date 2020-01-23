@@ -299,8 +299,7 @@ namespace Notes2021.Controllers
             NoteFile noteFile = await NoteDataManager.GetFileById(_db, id);
             await AccessManager.Audit(_db, "Delete", User.Identity.Name, _userManager.GetUserId(User), "Delete NotesFile " + noteFile.NoteFileName);
 
-            for ( int i = 0; i <= noteFile.NumberArchives; i++)
-                await NoteDataManager.DeleteNoteFile(_db, id, i);
+            await NoteDataManager.DeleteNoteFile(_db, id);
             return RedirectToAction("Index");
         }
 
