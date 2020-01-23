@@ -148,6 +148,20 @@ namespace NotesUtil
         {
 
         }
+
+        private void Import_Load(object sender, EventArgs e)
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+
+            string constr = config["ConnectionString"];
+            int loc = constr.IndexOf("Database=");
+            constr = constr.Substring(loc + 9, 25);
+            constr = constr.Substring(0, constr.IndexOf(";"));
+
+            this.Text = "Import - " + constr;
+        }
     }
 }
 

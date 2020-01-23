@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +21,20 @@ namespace NotesUtil
             Import dlg = new Import();
 
             dlg.ShowDialog();
+        }
+
+        private void OptionsMenu_Load(object sender, EventArgs e)
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+
+            string constr = config["ConnectionString"];
+            int loc = constr.IndexOf("Database=");
+            constr = constr.Substring(loc + 9, 25);
+            constr = constr.Substring(0, constr.IndexOf(";"));
+
+            this.Text = "NotesUtil Menu - " + constr;
 
         }
     }
