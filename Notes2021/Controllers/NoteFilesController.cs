@@ -332,35 +332,35 @@ namespace Notes2021.Controllers
                 return NotFound();
             }
 
-            await AccessManager.Audit(_db, "Archive", User.Identity.Name, _userManager.GetUserId(User), "Archive NotesFile " + noteFile.NoteFileName);
+            NoteDataManager.ArchiveNoteFile(_db, noteFile);
 
-            noteFile.NumberArchives++;
-            _db.Update(noteFile);
+            //noteFile.NumberArchives++;
+            //_db.Update(noteFile);
 
-            List<NoteHeader> nhl = await _db.NoteHeader.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToListAsync();
+            //List<NoteHeader> nhl = await _db.NoteHeader.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToListAsync();
 
-            foreach (NoteHeader nh in nhl)
-            {
-                nh.ArchiveId = noteFile.NumberArchives;
-                _db.Update(nh);
-            }
+            //foreach (NoteHeader nh in nhl)
+            //{
+            //    nh.ArchiveId = noteFile.NumberArchives;
+            //    _db.Update(nh);
+            //}
 
-            List<NoteAccess> nal = await _db.NoteAccess.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToListAsync();
-            foreach (NoteAccess na in nal)
-            {
-                na.ArchiveId = noteFile.NumberArchives;
-            }
-            _db.NoteAccess.AddRange(nal);
+            //List<NoteAccess> nal = await _db.NoteAccess.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToListAsync();
+            //foreach (NoteAccess na in nal)
+            //{
+            //    na.ArchiveId = noteFile.NumberArchives;
+            //}
+            //_db.NoteAccess.AddRange(nal);
 
-            List<Tags> ntl = await _db.Tags.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToListAsync();
-            foreach (Tags nt in ntl)
-            {
-                nt.ArchiveId = noteFile.NumberArchives;
-                _db.Update(nt);
-            }
+            //List<Tags> ntl = await _db.Tags.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToListAsync();
+            //foreach (Tags nt in ntl)
+            //{
+            //    nt.ArchiveId = noteFile.NumberArchives;
+            //    _db.Update(nt);
+            //}
 
 
-            await _db.SaveChangesAsync();
+            //await _db.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

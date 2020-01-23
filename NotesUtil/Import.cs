@@ -77,6 +77,16 @@ namespace NotesUtil
                 return;
             }
 
+            if (checkBox1.Checked)
+            {
+                NoteDataManager.ArchiveNoteFile(_db, nf);
+
+                nf = _db.NoteFile.Where(p => p.NoteFileName == notefilename).SingleOrDefault();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+
+
             StreamReader file;
             try
             {
@@ -130,6 +140,11 @@ namespace NotesUtil
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
         }

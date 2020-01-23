@@ -145,6 +145,11 @@ namespace Notes2021Lib.Import
                                         if (basenotes % 10 == 0)
                                         {
                                             Output("Base notes: " + basenotes);
+                                            if (basenotes % 100 == 0)
+                                            {
+                                                GC.Collect();
+                                                GC.WaitForPendingFinalizers();
+                                            }
                                         }
 
                                     }
@@ -269,7 +274,13 @@ namespace Notes2021Lib.Import
                                         if (basenotes % 10 == 0)
                                         {
                                             Output("Base notes: " + basenotes);
+                                            if (basenotes % 100 == 0)
+                                            {
+                                                GC.Collect();
+                                                GC.WaitForPendingFinalizers();
+                                            }
                                         }
+
 
                                     }
                                     else // resp
@@ -375,6 +386,11 @@ namespace Notes2021Lib.Import
                                     if (basenotes % 10 == 0)
                                     {
                                         Output("Base notes: " + basenotes);
+                                        if (basenotes % 100 == 0)
+                                        {
+                                            GC.Collect();
+                                            GC.WaitForPendingFinalizers();
+                                        }
                                     }
 
                                 }

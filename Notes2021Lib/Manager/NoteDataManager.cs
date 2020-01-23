@@ -994,7 +994,37 @@ namespace Notes2021Lib.Manager
                 .ToListAsync();
         }
 
+        public static void ArchiveNoteFile(ApplicationDbContext _db, NoteFile noteFile)
+        {
+            noteFile.NumberArchives++;
+            _db.Update(noteFile);
 
+            List<NoteHeader> nhl = _db.NoteHeader.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
+
+            foreach (NoteHeader nh in nhl)
+            {
+                nh.ArchiveId = noteFile.NumberArchives;
+                _db.Update(nh);
+            }
+
+            List<NoteAccess> nal = _db.NoteAccess.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
+            foreach (NoteAccess na in nal)
+            {
+                na.ArchiveId = noteFile.NumberArchives;
+            }
+            _db.NoteAccess.AddRange(nal);
+
+            List<Tags> ntl = _db.Tags.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
+            foreach (Tags nt in ntl)
+            {
+                nt.ArchiveId = noteFile.NumberArchives;
+                _db.Update(nt);
+            }
+
+
+            _db.SaveChanges();
+
+        }
 
 
     }
