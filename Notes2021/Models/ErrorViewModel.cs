@@ -1,5 +1,3 @@
-using System;
-
 namespace Notes2021.Models
 {
     public class ErrorViewModel

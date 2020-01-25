@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Notes2021.Api;
 using Notes2021Lib.Data;
-using Notes2021.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {

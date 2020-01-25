@@ -24,16 +24,13 @@
 */
 
 
-using System;
-using System.Text;
-using System.IO;
-using System.Threading.Tasks;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Configuration;
+using System;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Notes2021Lib.Import
 {
@@ -43,7 +40,7 @@ namespace Notes2021Lib.Import
 
         public async Task<bool> Import(ApplicationDbContext _db, string myFile, string myNotes)
         {
-             Output("");
+            Output("");
 
             StreamReader file;
             try
@@ -649,6 +646,6 @@ namespace Notes2021Lib.Import
         }
     }
 
- 
+
 
 }

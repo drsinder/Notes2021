@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Notes2021Lib.Data;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Notes2021Lib.Data;
 
 namespace Notes2021.Models
 {

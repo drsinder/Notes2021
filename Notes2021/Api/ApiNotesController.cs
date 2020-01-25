@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Notes2021Lib.Manager;
 using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Notes2021.Api
 {
@@ -17,7 +17,7 @@ namespace Notes2021.Api
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public ApiNotesController(ApplicationDbContext context, 
+        public ApiNotesController(ApplicationDbContext context,
             UserManager<IdentityUser> userManager)
         {
             _context = context;
@@ -95,7 +95,7 @@ namespace Notes2021.Api
         /// <param name="id2">NoteOrdinal of base note (Note #)</param>
         /// <returns>IEnumerable&lt;NoteHeader&gt;&gt;</returns>
         [HttpGet("{id}/{id2}")]
-        public async Task<ActionResult<IEnumerable<NoteHeader>>> 
+        public async Task<ActionResult<IEnumerable<NoteHeader>>>
             GetNoteForFile(int id, int id2)
         {
             string authHeader = Request.Headers["authentication"];
@@ -126,7 +126,7 @@ namespace Notes2021.Api
         /// <param name="id3">ResponseOrdinal (0) for the base note...</param>
         /// <returns>NoteContent object</returns>
         [HttpGet("{id}/{id2}/{id3}")]
-        public async Task<ActionResult<NoteContent>> 
+        public async Task<ActionResult<NoteContent>>
             GetNoteContent(int id, int id2, int id3)
         {
             string authHeader = Request.Headers["authentication"];
@@ -156,7 +156,7 @@ namespace Notes2021.Api
         /// <param name="id4">ignored dummy parameter</param>
         /// <returns>IEnumerable&lt;Tags&gt;&gt;</returns>
         [HttpGet("{id}/{id2}/{id3}/{id4}")]
-        public async Task<ActionResult<IEnumerable<Tags>>> 
+        public async Task<ActionResult<IEnumerable<Tags>>>
         GetNoteTags(int id, int id2, int id3, int id4)
         {
             string authHeader = Request.Headers["authentication"];

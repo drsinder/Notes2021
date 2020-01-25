@@ -23,13 +23,13 @@
 **--------------------------------------------------------------------------
 */
 
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 //using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Notes2021Lib.Data;
 using Microsoft.EntityFrameworkCore;
+using Notes2021Lib.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021Lib.Manager
 {
@@ -117,7 +117,7 @@ namespace Notes2021Lib.Manager
             //NoteFile nf = await db.NoteFile.Where(p => p.OwnerId == userId && p.Id == fileId).SingleOrDefaultAsync();
             //if (nf != null)
             //{
-               
+
             //    NoteAccess ownerAccess = new NoteAccess
             //    {
             //        UserID = userId,

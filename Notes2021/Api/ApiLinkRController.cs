@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Notes2021Lib.Manager;
 using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Notes2021.Api
 {
@@ -48,7 +48,7 @@ namespace Notes2021.Api
 
             NoteHeader extant = await _context.NoteHeader.SingleAsync(p => p.LinkGuid == inputModel.baseGuid);
 
-            if (extant == null ) // || extant.NoteFileId != file.Id)
+            if (extant == null) // || extant.NoteFileId != file.Id)
                 return "Could not find base note";
 
             inputModel.header.NoteOrdinal = extant.NoteOrdinal;

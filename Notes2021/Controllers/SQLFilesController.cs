@@ -23,19 +23,17 @@
 **--------------------------------------------------------------------------
 */
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Notes2021.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using System.IO;
-using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Notes2021Lib.Data;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 // ReSharper disable PossibleNullReferenceException
 
@@ -138,7 +136,7 @@ namespace Notes2021.Controllers
         {
             long retId = 0;
 
-            string fname = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.ToString().Trim( '"' );
+            string fname = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.ToString().Trim('"');
 
             string nameonly = Path.GetFileNameWithoutExtension(fname);
             string extonly = Path.GetExtension(fname);

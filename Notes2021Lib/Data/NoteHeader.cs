@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.Win32.SafeHandles;
-using System.Runtime.InteropServices;
 
 namespace Notes2021Lib.Data
 {
     public class NoteHeader
-    { 
+    {
         // Uniquely identifies the note
         [Required]
         [Key]

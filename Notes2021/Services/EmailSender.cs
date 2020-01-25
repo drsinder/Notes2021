@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Notes2021.Services
 {

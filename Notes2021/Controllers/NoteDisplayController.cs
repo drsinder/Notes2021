@@ -23,28 +23,28 @@
     **--------------------------------------------------------------------------
     */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Notes2021.Api;
+using Notes2021.Manager;
 //using Notes2020.Api;
 using Notes2021.Models;
-using Notes2021Lib.Models;
-using Notes2021.Api;
-using Notes2021Lib.Manager;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Notes2021Lib.Data;
-using Notes2021.Manager;
+using Notes2021Lib.Manager;
+using Notes2021Lib.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {
@@ -256,7 +256,7 @@ namespace Notes2021.Controllers
 
             bool isAdmin = User.IsInRole("Admin");
 
-            if ( id < 1)
+            if (id < 1)
             {
                 return RedirectToAction("Index", "NoteFileList");
                 //ViewBag.Message = "FileID given is null.";
@@ -323,7 +323,7 @@ namespace Notes2021.Controllers
 
             idxModel.ArcId = arcId;
 
-          // Pass NoteFile list to View
+            // Pass NoteFile list to View
             return View(_userManager, idxModel);
         }
 
@@ -373,7 +373,7 @@ namespace Notes2021.Controllers
 
             idxModel.myAccess = myacc;
             idxModel.ExpandOrdinal = note.NoteOrdinal;
-            
+
             if (idxModel.Notes == null)
             {
                 ViewBag.Message = "Could not get base note '" + note.NoteOrdinal + "' and responses for '" + idxModel.noteFile.NoteFileName + "'.";
@@ -599,7 +599,7 @@ namespace Notes2021.Controllers
 
             return bnh?.Id;
         }
-        
+
         // GET: NoteDisplay/Edit/5
         /// <summary>
         /// Prepare to edit a note
@@ -644,7 +644,7 @@ namespace Notes2021.Controllers
                 TagLine = string.Empty
             };
 
-            foreach ( Tags tag in note.Tags)
+            foreach (Tags tag in note.Tags)
             {
                 test.TagLine += tag.Tag + " ";
             }
@@ -686,7 +686,7 @@ namespace Notes2021.Controllers
             // deal with tags
 
             _db.Tags.RemoveRange(edited.Tags);
-            
+
             if (nc.TagLine != null && nc.TagLine.Length > 1)
             {
                 List<Tags> theTags = new List<Tags>();
@@ -740,7 +740,7 @@ namespace Notes2021.Controllers
                         _db.LinkQueue.Add(q);
                         await _db.SaveChangesAsync();
 
-                        LinkProcessor lp = new LinkProcessor(_db); 
+                        LinkProcessor lp = new LinkProcessor(_db);
 
                         BackgroundJob.Enqueue(() => lp.ProcessLinkAction(q.Id));
                     }
@@ -885,7 +885,7 @@ namespace Notes2021.Controllers
                     return View("Error");
                 }
                 nc = await _db.NoteHeader
-                    .Where(a => a.NoteFileId == fileId && a.ArchiveId == (int)HttpContext.Session.GetInt32("ArchiveID") 
+                    .Where(a => a.NoteFileId == fileId && a.ArchiveId == (int)HttpContext.Session.GetInt32("ArchiveID")
                         && a.NoteOrdinal == noteOrd && a.ResponseOrdinal == 0)
                     .FirstOrDefaultAsync();
             }
@@ -985,7 +985,7 @@ namespace Notes2021.Controllers
                 int arcId = (int)HttpContext.Session.GetInt32("ArchiveID");
 
                 NoteFile z = await NoteDataManager.GetFileByIdWithHeaders(_db, fileId, arcId);
-                List<NoteHeader> bnhl = z.NoteHeaders.Where( p => p.ResponseOrdinal == 0 ).ToList();
+                List<NoteHeader> bnhl = z.NoteHeaders.Where(p => p.ResponseOrdinal == 0).ToList();
 
                 long cnt = bnhl.LongCount();
 
@@ -1130,7 +1130,7 @@ namespace Notes2021.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AsHtmlAlt(int id, int id2, int arcId)
         {
-            ExportController exp = new ExportController(_appEnv, _userManager, _signInManager,  _db);
+            ExportController exp = new ExportController(_appEnv, _userManager, _signInManager, _db);
 
             ExportViewModel model = new ExportViewModel()
             {
@@ -1249,7 +1249,7 @@ namespace Notes2021.Controllers
                 NoteSubject = nc.NoteSubject,
                 wholestring = false
             };
-            List<NoteHeader> bnhl = await NoteDataManager.GetBaseNoteHeadersForNote(_db,  nc.NoteFileId, arcId, nc.NoteOrdinal);
+            List<NoteHeader> bnhl = await NoteDataManager.GetBaseNoteHeadersForNote(_db, nc.NoteFileId, arcId, nc.NoteOrdinal);
             NoteHeader bnh = bnhl[0];
             model.hasstring = bnh.ResponseCount > 0;
 
@@ -1292,7 +1292,7 @@ namespace Notes2021.Controllers
         /// <returns></returns>
         public async Task<IActionResult> BeginSequence()     // begin first file in list with first unread note
         {
-            string userid =_userManager.GetUserId(User);
+            string userid = _userManager.GetUserId(User);
             List<Sequencer> seqList = await NoteDataManager.GetSeqListForUser(_db, userid);
 
             if (seqList.Count == 0)
@@ -1391,7 +1391,7 @@ namespace Notes2021.Controllers
         public async Task<Sequencer> FirstSeq()   // get first sequencer data line for user
         {
             HttpContext.Session.Remove("CurrentSeq");
-        
+
             string userid = _userManager.GetUserId(User);
             List<Sequencer> list = await NoteDataManager.GetSeqListForUser(_db, userid);
 
@@ -1721,9 +1721,9 @@ namespace Notes2021.Controllers
                 case Notes2021Lib.Data.SearchOption.Tag:
                     if (nc.Tags != null && nc.Tags.Count > 0)
                     {
-                        foreach ( Tags item in nc.Tags)
+                        foreach (Tags item in nc.Tags)
                         {
-                            if (String.CompareOrdinal(item.Tag.ToLower(), sv.Text.Trim()) == 0 )
+                            if (String.CompareOrdinal(item.Tag.ToLower(), sv.Text.Trim()) == 0)
                             {
                                 Search x = sv.Clone(sv);
                                 x.NoteID = nc.Id;
@@ -1950,9 +1950,9 @@ namespace Notes2021.Controllers
                 }
                 await _db.SaveChangesAsync();
 
-                return RedirectToAction("ExportMarked", "Export", new {id});
+                return RedirectToAction("ExportMarked", "Export", new { id });
             }
-            return RedirectToAction("Viewit", "NoteFileList", new {id});
+            return RedirectToAction("Viewit", "NoteFileList", new { id });
         }
 
         public async Task<IActionResult> Copy(long? id)
@@ -2016,8 +2016,8 @@ namespace Notes2021.Controllers
             {
                 NoteContent newContent = new NoteContent()
                 {
-                    NoteBody = "<p><strong>** =" + nc.NoteFile.NoteFileName + " - " + nc.AuthorName 
-                               + " - " + nc.LastEdited.ToShortDateString() + " " 
+                    NoteBody = "<p><strong>** =" + nc.NoteFile.NoteFileName + " - " + nc.AuthorName
+                               + " - " + nc.LastEdited.ToShortDateString() + " "
                                + nc.LastEdited.ToShortTimeString() + " UCT" + " **</strong></p>"
                 };
                 if (!string.IsNullOrEmpty(nc.NoteContent.DirectorMessage))
@@ -2047,7 +2047,7 @@ namespace Notes2021.Controllers
                 string tags = string.Empty;
                 if (nc.Tags != null && nc.Tags.Count > 0)
                 {
-                    foreach( Tags item in nc.Tags)
+                    foreach (Tags item in nc.Tags)
                     {
                         tags += item.Tag + " ";
                     }

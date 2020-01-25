@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Notes2021Lib.Data;
+using Notes2021Lib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Notes2021Lib.Data;
-using Notes2021Lib.Models;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Notes2021Lib.Manager
 {
@@ -175,7 +175,7 @@ namespace Notes2021Lib.Manager
             db.Subscription.RemoveRange(subs);
 
             db.NoteFile.Remove(noteFile);
-            
+
             await db.SaveChangesAsync();
 
             return true;
@@ -496,8 +496,8 @@ namespace Notes2021Lib.Manager
                         await db.SaveChangesAsync();
 
 
-                    //    LinkProcessor lp = new LinkProcessor(db);
-                    //    BackgroundJob.Enqueue(() => lp.ProcessLinkAction(q.Id));
+                        //    LinkProcessor lp = new LinkProcessor(db);
+                        //    BackgroundJob.Enqueue(() => lp.ProcessLinkAction(q.Id));
                     }
                 }
             }
@@ -535,7 +535,7 @@ namespace Notes2021Lib.Manager
 
 
         public static async Task<bool> SendNotesAsync(ForwardViewModel fv, ApplicationDbContext db, IEmailSender emailSender,
-                string email, string name, string Url )
+                string email, string name, string Url)
         {
             await emailSender.SendEmailAsync(fv.ToEmail, fv.NoteSubject,
                 await MakeNoteForEmail(fv, db, email, name, Url));
@@ -594,7 +594,7 @@ namespace Notes2021Lib.Manager
 
         }
 
-               /// <summary>
+        /// <summary>
         /// Get the BaseNoteHeader for a Note
         /// </summary>
         /// <param name="db">ApplicationDbContext</param>

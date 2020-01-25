@@ -22,29 +22,27 @@
     **
     **--------------------------------------------------------------------------
     */
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Notes2021.Manager;
 using Notes2021.Models;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
-using Microsoft.AspNetCore.Http;
-using Notes2021.Manager;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using Notes2021.Services;
 using PusherServer;
-using Hangfire;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
-using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {
@@ -56,13 +54,13 @@ namespace Notes2021.Controllers
         private readonly string _stylePath;
 
         public HomeController(
-            IWebHostEnvironment appEnv, 
+            IWebHostEnvironment appEnv,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<HomeController> logger,
             IEmailSender emailSender,
-            ApplicationDbContext db) : base(userManager,signInManager, db)
+            ApplicationDbContext db) : base(userManager, signInManager, db)
         {
             _logger = logger;
             _emailSender = emailSender;
@@ -261,7 +259,7 @@ namespace Notes2021.Controllers
         public async Task<IActionResult> Preferences(UserAuxData model)
         {
             UserAuxData user = await _db.UserData.SingleAsync(p => p.UserId == _userManager.GetUserId(User));
- 
+
             user.Pref1 = model.Pref1;
             user.Pref2 = model.Pref2;
             user.MyStyle = model.MyStyle;
@@ -324,7 +322,7 @@ namespace Notes2021.Controllers
 
             if (id2)
             {
-                var data = new { username = id, message = NoteDataManager.GetSafeUserDisplayName(_userManager, User, _db) + " wants to chat with you."};
+                var data = new { username = id, message = NoteDataManager.GetSafeUserDisplayName(_userManager, User, _db) + " wants to chat with you." };
                 await pusher.TriggerAsync("presence-channel", "chat_request_event", data);
             }
             else

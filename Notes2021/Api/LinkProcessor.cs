@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Notes2021Lib.Manager;
-using Notes2021Lib.Data;
 
 namespace Notes2021.Api
 {
@@ -53,7 +53,7 @@ namespace Notes2021.Api
                     LinkCreateModel inputModel = new LinkCreateModel();
 
                     inputModel.linkedfile = notefilename;
-                    
+
                     inputModel.header = (await db.NoteHeader.SingleAsync(p => p.LinkGuid == q.LinkGuid)).CloneForLink();
                     inputModel.content = (await db.NoteContent.SingleAsync(p => p.NoteHeaderId == inputModel.header.Id)).CloneForLink();
                     try
@@ -62,7 +62,7 @@ namespace Notes2021.Api
                             p.NoteFileId == notefile.Id && p.NoteHeaderId == inputModel.header.Id)
                             .ToListAsync());
                     }
-                    catch 
+                    catch
                     {
                         inputModel.tags = null;
                     }
@@ -93,7 +93,7 @@ namespace Notes2021.Api
 
                     if (result == "Ok")
                         db.LinkQueue.Remove(q);
-                    
+
                     await db.SaveChangesAsync();
 
 
@@ -154,7 +154,7 @@ namespace Notes2021.Api
                     return result2;
 
                 case LinkAction.Edit:
-                    
+
 
                     LinkCreateEModel model = new LinkCreateEModel()
                     {

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Notes2021Lib.Data;
+﻿using Notes2021Lib.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace Notes2021.Models
 {

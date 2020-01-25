@@ -22,17 +22,17 @@
 **
 **--------------------------------------------------------------------------
 */
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Notes2021Lib.Manager;
 using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {
@@ -170,7 +170,7 @@ namespace Notes2021.Controllers
             ViewBag.UserList = list2;
 
             // setup a new entry pass to view
-            NoteAccess na = new NoteAccess {NoteFileId = id};
+            NoteAccess na = new NoteAccess { NoteFileId = id };
             // set the NoteFileID
             return View(na);
         }

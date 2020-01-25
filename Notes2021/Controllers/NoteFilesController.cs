@@ -23,18 +23,16 @@
     **--------------------------------------------------------------------------
     */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Notes2021.Models;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {
@@ -168,7 +166,7 @@ namespace Notes2021.Controllers
             return View(noteFile);
         }
 
- 
+
 
         // GET: NoteFiles/Create
         public IActionResult Create()

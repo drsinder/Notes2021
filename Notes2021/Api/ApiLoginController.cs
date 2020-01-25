@@ -1,11 +1,11 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Notes2021Lib.Manager;
 using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 
 
 namespace Notes2021.Api
@@ -48,8 +48,8 @@ namespace Notes2021.Api
             byte[] by = new byte[200];
             if (lth != null)
             {
-                str.Read(by, 0, (int) lth);
-                string converted = Encoding.UTF8.GetString(by, 0, (int) lth);
+                str.Read(by, 0, (int)lth);
+                string converted = Encoding.UTF8.GetString(by, 0, (int)lth);
 
                 string[] items = converted.Split('/');
                 var result = await _signInManager.PasswordSignInAsync(items[0], items[1], false, true);

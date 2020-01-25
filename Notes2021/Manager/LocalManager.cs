@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Notes2021.Controllers;
+using Notes2021Lib.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Notes2021Lib.Data;
-using Microsoft.AspNetCore.Http;
-using Notes2021.Controllers;
 
 namespace Notes2021.Manager
 {

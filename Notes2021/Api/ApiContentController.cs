@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +6,10 @@ using Notes2021.Controllers;
 using Notes2021.Models;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace Notes2021.Api
@@ -23,8 +23,8 @@ namespace Notes2021.Api
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IWebHostEnvironment _appEnv;
 
-        public ApiContentController(ApplicationDbContext context, 
-            UserManager<IdentityUser> userManager, 
+        public ApiContentController(ApplicationDbContext context,
+            UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IWebHostEnvironment appEnv
         )
@@ -82,15 +82,15 @@ namespace Notes2021.Api
             if (inputModel.BaseNoteHeaderID == 0)
             {
                 return await NoteDataManager
-                    .CreateNote(_context, _userManager, nheader, 
-                        inputModel.MyNote.Replace("\n", "<br />"), 
+                    .CreateNote(_context, _userManager, nheader,
+                        inputModel.MyNote.Replace("\n", "<br />"),
                         inputModel.TagLine,
                     inputModel.DirectorMessage, true, false);
             }
             NoteHeader bnh = await NoteDataManager.GetNoteHeader(_context, inputModel.BaseNoteHeaderID);
             nheader.BaseNoteId = bnh.Id;
-            return await NoteDataManager.CreateResponse(_context, _userManager, 
-                nheader, inputModel.MyNote, inputModel.TagLine, 
+            return await NoteDataManager.CreateResponse(_context, _userManager,
+                nheader, inputModel.MyNote, inputModel.TagLine,
                 inputModel.DirectorMessage, true, false);
         }
 

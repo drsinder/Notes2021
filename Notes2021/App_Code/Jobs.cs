@@ -1,8 +1,8 @@
-﻿using Notes2021Lib.Data;
+﻿using Hangfire;
+using Notes2021Lib.Data;
 using PusherServer;
 using System;
 using System.Threading.Tasks;
-using Hangfire;
 
 namespace Notes2021
 {

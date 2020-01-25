@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Win32.SafeHandles;
-using System.Runtime.InteropServices;
+﻿using System.ComponentModel.DataAnnotations;
 
 
 namespace Notes2021Lib.Data

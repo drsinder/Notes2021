@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Notes2021Lib.Manager;
-using Notes2021Lib.Data;
 
 namespace Notes2021.Api
 {

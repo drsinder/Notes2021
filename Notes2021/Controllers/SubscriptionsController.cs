@@ -23,17 +23,17 @@
 **--------------------------------------------------------------------------
 */
 
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using Notes2021Lib.Data;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Notes2021Lib.Manager;
 using Notes2021.Manager;
+using Notes2021Lib.Data;
+using Notes2021Lib.Manager;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {

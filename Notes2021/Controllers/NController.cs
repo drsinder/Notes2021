@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
-using System.Linq;
 
 namespace Notes2021.Controllers
 {
@@ -147,7 +145,7 @@ namespace Notes2021.Controllers
                     }
                     UserAuxData appUser;
                     string userid = _userManager.GetUserId(User);
-                    appUser = await  _db.UserData.SingleOrDefaultAsync(p => p.UserId == userid);
+                    appUser = await _db.UserData.SingleOrDefaultAsync(p => p.UserId == userid);
 
                     if (!string.IsNullOrEmpty(appUser.MyStyle))
                     {

@@ -1,17 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 
@@ -94,7 +90,7 @@ namespace NotesUtil
             }
             catch
             {
-                
+
                 textBox2.Text = ("File " + filename + " not found!");
                 return;
             }
@@ -105,7 +101,7 @@ namespace NotesUtil
 
 
             Importer imp = new Importer();
-           
+
             imp.Import(_db, filename, notefilename);
 
             //button1.Enabled = true;
