@@ -27,21 +27,26 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
 using System.Threading.Tasks;
 
 namespace Notes2021.Controllers
 {
+    public partial class Importer : Notes2021Lib.Import.Importer
+    {
+        public HttpContext context;
+        public override void Output(string message)
+        {
+            context.Session.SetString("ImportStatus", context.Session.GetString("ImportStatus") + "   " + message);
+        }
+    }
+
     [Authorize(Roles = "Admin")]
     public class NotesImportController : NController
     {
         private readonly IWebHostEnvironment _appEnv;
-
-        private const char Ff = (char)(12); //  FF
-
-        //private const char TAB = (char)(9); //  Tab
-
 
         public NotesImportController(
             IWebHostEnvironment appEnv,
@@ -97,7 +102,9 @@ namespace Notes2021.Controllers
             string fileName = _appEnv.ContentRootPath + "\\wwwroot\\ImportFiles\\" + noteFile.NoteFileName + ".txt";
             int id = noteFile.Id;
 
-            Notes2021Lib.Import.Importer imp = new Notes2021Lib.Import.Importer();
+            Importer imp = new Importer();
+
+            imp.context = HttpContext;
 
             await imp.Import(_db, fileName, noteFile.NoteFileName);
 

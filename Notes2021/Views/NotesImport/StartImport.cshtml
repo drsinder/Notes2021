@@ -23,6 +23,8 @@
     **--------------------------------------------------------------------------
     */*@
 
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
 @model Notes2021Lib.Data.NoteFile
 @{
     ViewBag.Title = "Import";
@@ -58,7 +60,15 @@
             </div>
         </div>
         <input type="submit" value="Begin Import" id="submit" />
+
+        <div><p id="status">@httpContextAccessor.HttpContext.Session.GetString("ImportStatus")</p></div>
         <script type="text/javascript">
+            //setIntervalStatus(function () {
+            //    var status = document.getElementById('status');
+            //    if (status !== null) {
+            //        status.
+            //    }
+            //}, 2000);
             var mysubmit = document.getElementById('submit');
             var myspin = document.getElementById('spinner');
             mysubmit.onclick = function () { myspin.style.visibility = "visible"; this.disabled = true; }
