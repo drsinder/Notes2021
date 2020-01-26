@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Http;
 using Notes2021Lib.Data;
 using Notes2021Lib.Manager;
 using System.Threading.Tasks;
+using PusherServer;
 
 namespace Notes2021.Controllers
 {
@@ -39,7 +40,18 @@ namespace Notes2021.Controllers
         public HttpContext context;
         public override void Output(string message)
         {
-            context.Session.SetString("ImportStatus", context.Session.GetString("ImportStatus") + "   " + message);
+            var options = new PusherOptions
+            {
+                Encrypted = true,
+                Cluster = Globals.PusherCluster
+
+            };
+            var pusher = new Pusher(Globals.PusherAppId, Globals.PusherKey, Globals.PusherSecret, options);
+
+            string newmessage = context.Session.GetString("ImportStatus") + "   " + message;
+            context.Session.SetString("ImportStatus", newmessage);
+
+            pusher.TriggerAsync("notes-channel", "import_status_message_event", new { newmessage });
         }
     }
 
@@ -105,6 +117,7 @@ namespace Notes2021.Controllers
             Importer imp = new Importer();
 
             imp.context = HttpContext;
+            HttpContext.Session.SetString("ImportStatus", string.Empty);
 
             await imp.Import(_db, fileName, noteFile.NoteFileName);
 

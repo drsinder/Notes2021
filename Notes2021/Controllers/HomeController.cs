@@ -367,7 +367,7 @@ namespace Notes2021.Controllers
             };
             var pusher = new Pusher(Globals.PusherAppId, Globals.PusherKey, Globals.PusherSecret, options);
 
-            await pusher.TriggerAsync("notes-channel", "sys_message_event", new { x.message });
+            await pusher.TriggerAsync("notes-channel", "import_status_message_event", new { x.message });
 
             return View("Index");
         }

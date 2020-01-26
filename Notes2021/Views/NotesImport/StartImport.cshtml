@@ -40,6 +40,7 @@
             <p>Importing:</p>
             <i class="fa fa-gear fa-spin" style="font-size:48px"></i>
         </div>
+        <div><p id="import_status"></p></div>
         <hr />
         <p>Note: You must have your import file named "@ViewBag.FileName" in the Web Application's "ImportFiles" folder.</p>
         @Html.HiddenFor(model => model.Id)
@@ -60,8 +61,6 @@
             </div>
         </div>
         <input type="submit" value="Begin Import" id="submit" />
-
-        <div><p id="status">@httpContextAccessor.HttpContext.Session.GetString("ImportStatus")</p></div>
         <script type="text/javascript">
             //setIntervalStatus(function () {
             //    var status = document.getElementById('status');

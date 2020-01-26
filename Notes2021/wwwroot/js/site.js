@@ -79,6 +79,11 @@ channel.bind('sys_message_event', function (data) {
     //alert(data.message);
 });
 
+channel.bind('import_status_message_event', function (data) {
+    var status_message = data.newmessage;
+    document.getElementById('import_status').innerHTML = status_message;
+});
+
 presence.bind('pusher:subscription_succeeded', function (members) {
     members.each(function (member) {
         window.add_member(member.id, member.info);
