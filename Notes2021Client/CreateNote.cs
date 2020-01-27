@@ -865,6 +865,80 @@ namespace Notes2021Client
 
         #endregion
 
+        #region  ToolBar
+
+
+        private void tbrSave_Click(object sender, System.EventArgs e)
+        {
+            SaveToolStripMenuItem_Click(this, e);
+        }
+
+        private void tbrOpen_Click(object sender, System.EventArgs e)
+        {
+            OpenToolStripMenuItem_Click(this, e);
+        }
+
+
+        private void tbrNew_Click(object sender, System.EventArgs e)
+        {
+            NewToolStripMenuItem_Click(this, e);
+        }
+
+        private void tbrFont_Click(object sender, System.EventArgs e)
+        {
+            SelectFontToolStripMenuItem_Click(this, e);
+        }
+
+
+        private void tbrLeft_Click(object sender, System.EventArgs e)
+        {
+            rtbDoc.SelectionAlignment = HorizontalAlignment.Left;
+        }
+
+
+        private void tbrCenter_Click(object sender, System.EventArgs e)
+        {
+            rtbDoc.SelectionAlignment = HorizontalAlignment.Center;
+        }
+
+
+        private void tbrRight_Click(object sender, System.EventArgs e)
+        {
+            rtbDoc.SelectionAlignment = HorizontalAlignment.Right;
+        }
+
+        private void tbrBold_Click(object sender, System.EventArgs e)
+        {
+            BoldToolStripMenuItem_Click(this, e);
+        }
+
+
+        private void tbrItalic_Click(object sender, System.EventArgs e)
+        {
+            ItalicToolStripMenuItem_Click(this, e);
+        }
+
+
+        private void tbrUnderline_Click(object sender, System.EventArgs e)
+        {
+            UnderlineToolStripMenuItem_Click(this, e);
+        }
+
+        private void tbrFind_Click(object sender, System.EventArgs e)
+        {
+            //frmFind f = new frmFind(this);
+            //f.Show();
+        }
+
+
+        private void tspColor_Click(object sender, EventArgs e)
+        {
+            FontColorToolStripMenuItem_Click(this, new EventArgs());
+        }
+
+
+
+        #endregion
 
     }
 }

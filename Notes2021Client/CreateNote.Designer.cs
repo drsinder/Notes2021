@@ -115,7 +115,25 @@
             this.PrintPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.PrintDocument1 = new System.Drawing.Printing.PrintDocument();
             this.SaveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.button2 = new System.Windows.Forms.Button();
+            this.ToolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tbrNew = new System.Windows.Forms.ToolStripButton();
+            this.tbrOpen = new System.Windows.Forms.ToolStripButton();
+            this.tbrSave = new System.Windows.Forms.ToolStripButton();
+            this.ToolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbrFont = new System.Windows.Forms.ToolStripButton();
+            this.tspColor = new System.Windows.Forms.ToolStripButton();
+            this.ToolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbrLeft = new System.Windows.Forms.ToolStripButton();
+            this.tbrCenter = new System.Windows.Forms.ToolStripButton();
+            this.tbrRight = new System.Windows.Forms.ToolStripButton();
+            this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbrBold = new System.Windows.Forms.ToolStripButton();
+            this.tbrItalic = new System.Windows.Forms.ToolStripButton();
+            this.tbrUnderline = new System.Windows.Forms.ToolStripButton();
+            this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbrFind = new System.Windows.Forms.ToolStripButton();
+            this.FontDialog1 = new System.Windows.Forms.FontDialog();
+            this.ColorDialog1 = new System.Windows.Forms.ColorDialog();
             this.MenuStrip1.SuspendLayout();
             this.ToolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -173,10 +191,10 @@
             this.rtbDoc.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbDoc.Location = new System.Drawing.Point(-5, 153);
+            this.rtbDoc.Location = new System.Drawing.Point(5, 153);
             this.rtbDoc.MaxLength = 100000;
             this.rtbDoc.Name = "rtbDoc";
-            this.rtbDoc.Size = new System.Drawing.Size(1051, 495);
+            this.rtbDoc.Size = new System.Drawing.Size(1030, 495);
             this.rtbDoc.TabIndex = 6;
             this.rtbDoc.Text = "";
             // 
@@ -598,6 +616,172 @@
             this.RemoveBulletsToolStripMenuItem.Text = "&Remove Bullets";
             this.RemoveBulletsToolStripMenuItem.Click += new System.EventHandler(this.RemoveBulletsToolStripMenuItem_Click);
             // 
+            // ToolStrip1
+            // 
+            this.ToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.ToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbrNew,
+            this.tbrOpen,
+            this.tbrSave,
+            this.ToolStripSeparator1,
+            this.tbrFont,
+            this.tspColor,
+            this.ToolStripSeparator4,
+            this.tbrLeft,
+            this.tbrCenter,
+            this.tbrRight,
+            this.ToolStripSeparator2,
+            this.tbrBold,
+            this.tbrItalic,
+            this.tbrUnderline,
+            this.ToolStripSeparator3,
+            this.tbrFind});
+            this.ToolStrip1.Location = new System.Drawing.Point(0, 125);
+            this.ToolStrip1.Name = "ToolStrip1";
+            this.ToolStrip1.Size = new System.Drawing.Size(312, 25);
+            this.ToolStrip1.TabIndex = 1;
+            this.ToolStrip1.Text = "ToolStrip1";
+            // 
+            // tbrNew
+            // 
+            this.tbrNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrNew.Image = ((System.Drawing.Image)(resources.GetObject("tbrNew.Image")));
+            this.tbrNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrNew.Name = "tbrNew";
+            this.tbrNew.Size = new System.Drawing.Size(23, 22);
+            this.tbrNew.Text = "New";
+            this.tbrNew.Click += new System.EventHandler(this.tbrNew_Click);
+            // 
+            // tbrOpen
+            // 
+            this.tbrOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrOpen.Image = ((System.Drawing.Image)(resources.GetObject("tbrOpen.Image")));
+            this.tbrOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrOpen.Name = "tbrOpen";
+            this.tbrOpen.Size = new System.Drawing.Size(23, 22);
+            this.tbrOpen.Text = "Open";
+            this.tbrOpen.Click += new System.EventHandler(this.tbrOpen_Click);
+            // 
+            // tbrSave
+            // 
+            this.tbrSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrSave.Image = ((System.Drawing.Image)(resources.GetObject("tbrSave.Image")));
+            this.tbrSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrSave.Name = "tbrSave";
+            this.tbrSave.Size = new System.Drawing.Size(23, 22);
+            this.tbrSave.Text = "Save";
+            this.tbrSave.Click += new System.EventHandler(this.tbrSave_Click);
+            // 
+            // ToolStripSeparator1
+            // 
+            this.ToolStripSeparator1.Name = "ToolStripSeparator1";
+            this.ToolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tbrFont
+            // 
+            this.tbrFont.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrFont.Image = ((System.Drawing.Image)(resources.GetObject("tbrFont.Image")));
+            this.tbrFont.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrFont.Name = "tbrFont";
+            this.tbrFont.Size = new System.Drawing.Size(23, 22);
+            this.tbrFont.Text = "Font";
+            this.tbrFont.Click += new System.EventHandler(this.tbrFont_Click);
+            // 
+            // tspColor
+            // 
+            this.tspColor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tspColor.Image = ((System.Drawing.Image)(resources.GetObject("tspColor.Image")));
+            this.tspColor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tspColor.Name = "tspColor";
+            this.tspColor.Size = new System.Drawing.Size(23, 22);
+            this.tspColor.Text = "toolStripButton1";
+            this.tspColor.Click += new System.EventHandler(this.tspColor_Click);
+            // 
+            // ToolStripSeparator4
+            // 
+            this.ToolStripSeparator4.Name = "ToolStripSeparator4";
+            this.ToolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tbrLeft
+            // 
+            this.tbrLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrLeft.Image = ((System.Drawing.Image)(resources.GetObject("tbrLeft.Image")));
+            this.tbrLeft.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrLeft.Name = "tbrLeft";
+            this.tbrLeft.Size = new System.Drawing.Size(23, 22);
+            this.tbrLeft.Text = "Left";
+            this.tbrLeft.Click += new System.EventHandler(this.tbrLeft_Click);
+            // 
+            // tbrCenter
+            // 
+            this.tbrCenter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrCenter.Image = ((System.Drawing.Image)(resources.GetObject("tbrCenter.Image")));
+            this.tbrCenter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrCenter.Name = "tbrCenter";
+            this.tbrCenter.Size = new System.Drawing.Size(23, 22);
+            this.tbrCenter.Text = "Center";
+            this.tbrCenter.Click += new System.EventHandler(this.tbrCenter_Click);
+            // 
+            // tbrRight
+            // 
+            this.tbrRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrRight.Image = ((System.Drawing.Image)(resources.GetObject("tbrRight.Image")));
+            this.tbrRight.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrRight.Name = "tbrRight";
+            this.tbrRight.Size = new System.Drawing.Size(23, 22);
+            this.tbrRight.Text = "Right";
+            this.tbrRight.Click += new System.EventHandler(this.tbrRight_Click);
+            // 
+            // ToolStripSeparator2
+            // 
+            this.ToolStripSeparator2.Name = "ToolStripSeparator2";
+            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tbrBold
+            // 
+            this.tbrBold.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrBold.Image = ((System.Drawing.Image)(resources.GetObject("tbrBold.Image")));
+            this.tbrBold.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrBold.Name = "tbrBold";
+            this.tbrBold.Size = new System.Drawing.Size(23, 22);
+            this.tbrBold.Text = "Bold";
+            this.tbrBold.Click += new System.EventHandler(this.tbrBold_Click);
+            // 
+            // tbrItalic
+            // 
+            this.tbrItalic.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrItalic.Image = ((System.Drawing.Image)(resources.GetObject("tbrItalic.Image")));
+            this.tbrItalic.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrItalic.Name = "tbrItalic";
+            this.tbrItalic.Size = new System.Drawing.Size(23, 22);
+            this.tbrItalic.Text = "Italic";
+            this.tbrItalic.Click += new System.EventHandler(this.tbrItalic_Click);
+            // 
+            // tbrUnderline
+            // 
+            this.tbrUnderline.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrUnderline.Image = ((System.Drawing.Image)(resources.GetObject("tbrUnderline.Image")));
+            this.tbrUnderline.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrUnderline.Name = "tbrUnderline";
+            this.tbrUnderline.Size = new System.Drawing.Size(23, 22);
+            this.tbrUnderline.Text = "Underline";
+            this.tbrUnderline.Click += new System.EventHandler(this.tbrUnderline_Click);
+            // 
+            // ToolStripSeparator3
+            // 
+            this.ToolStripSeparator3.Name = "ToolStripSeparator3";
+            this.ToolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tbrFind
+            // 
+            this.tbrFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbrFind.Image = ((System.Drawing.Image)(resources.GetObject("tbrFind.Image")));
+            this.tbrFind.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbrFind.Name = "tbrFind";
+            this.tbrFind.Size = new System.Drawing.Size(23, 22);
+            this.tbrFind.Text = "Find";
+            this.tbrFind.Click += new System.EventHandler(this.tbrFind_Click);
+            // 
             // CreateNote
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -614,10 +798,13 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.MenuStrip1);
             this.MainMenuStrip = this.MenuStrip1;
+            this.Controls.Add(this.ToolStrip1);
             this.Name = "CreateNote";
             this.Text = "Create Note";
             this.MenuStrip1.ResumeLayout(false);
             this.MenuStrip1.PerformLayout(); this.ResumeLayout(false);
+            this.ToolStrip1.ResumeLayout(false);
+            this.ToolStrip1.PerformLayout();
             this.PerformLayout();
 
         }
