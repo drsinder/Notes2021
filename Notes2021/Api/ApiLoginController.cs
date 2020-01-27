@@ -48,7 +48,14 @@ namespace Notes2021.Api
             byte[] by = new byte[200];
             if (lth != null)
             {
-                str.Read(by, 0, (int)lth);
+                try
+                {
+                    await str.ReadAsync(by, 0, (int)lth);
+                }
+                catch (Exception ex)
+                {
+                    string x = ex.Message;
+                }
                 string converted = Encoding.UTF8.GetString(by, 0, (int)lth);
 
                 string[] items = converted.Split('/');
