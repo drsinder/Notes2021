@@ -136,10 +136,10 @@ namespace Notes2021Client
 
         private void buttonReply_Click(object sender, EventArgs e)
         {
-            //new CreateNote(MyFile, Myheadlist[0].Id, null, null, null, this)
-            //{
-            //    Visible = true
-            //};
+            new CreateNote(MyFile, Myheadlist[0].Id, null, null, null, this)
+            {
+                Visible = true
+            };
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
@@ -148,10 +148,10 @@ namespace Notes2021Client
 
             IEnumerable<Tags> myTags = Actions.GetTags(Program.MyClient, MyFile.Id, baseOrdinal, currentResp);
 
-            //new CreateNote(MyFile, Myheadlist[0].Id, Myheadlist[currentResp], noteContent, myTags, this)
-            //{
-            //    Visible = true
-            //};
+            new CreateNote(MyFile, Myheadlist[0].Id, Myheadlist[currentResp], noteContent, myTags, this)
+            {
+                Visible = true
+            };
 
         }
 
