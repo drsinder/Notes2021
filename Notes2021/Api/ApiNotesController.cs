@@ -47,6 +47,7 @@ namespace Notes2021.Api
             List<NoteFile> myFiles = new List<NoteFile>();
             foreach (var file in allFiles)
             {
+                file.Owner = null;
                 NoteAccess myAccess = await AccessManager
                     .GetAccess(_context, me.Id, file.Id, 0);
                 if (myAccess.ReadAccess || myAccess.Write)
