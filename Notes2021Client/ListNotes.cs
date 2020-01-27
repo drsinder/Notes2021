@@ -77,10 +77,10 @@ namespace Notes2021Client
         {
             NoteHeader myHeader = (NoteHeader)dataGridView1.Rows[e.RowIndex].DataBoundItem;
 
-            //new DisplayNote(MyFile, myHeader.NoteOrdinal, this)
-            //{
-            //    Visible = true
-            //};
+            new DisplayNote(MyFile, myHeader.NoteOrdinal, this)
+            {
+                Visible = true
+            };
         }
 
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
@@ -91,10 +91,10 @@ namespace Notes2021Client
             if (dataGridViewRow != null)
             {
                 NoteHeader myHeader = (NoteHeader)dataGridViewRow.DataBoundItem;
-                //new DisplayNote(MyFile, myHeader.NoteOrdinal, this)
-                //{
-                //    Visible = true
-                //};
+                new DisplayNote(MyFile, myHeader.NoteOrdinal, this)
+                {
+                    Visible = true
+                };
             }
         }
 
@@ -127,7 +127,10 @@ namespace Notes2021Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            //new CreateNote(MyFile, 0, null, null, null, this)
+            //{
+            //    Visible = true
+            //};
         }
 
         private void button2_Click(object sender, EventArgs e)
