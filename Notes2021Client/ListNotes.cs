@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Notes2021Client
@@ -130,22 +132,208 @@ namespace Notes2021Client
 
         private void button2_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-
+            Relist();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            string ext = ".txt";
+            bool isHTML = false;
 
+            if (sender == button3)
+            {
+                ext = ".html";
+                isHTML = true;
+            }
+
+            Stream myStream = Actions.Export(Program.MyClient, MyFile.Id, isHTML);
+
+            string docsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            docsPath += "\\NotesFile-" + MyFile.NoteFileName + ext;
+
+            FileStream file = new FileStream(docsPath, FileMode.Create, FileAccess.Write);
+            myStream.CopyToAsync(file).GetAwaiter();
+
+            Thread.Sleep(1000);
+
+            file.Close();
+            myStream.Close();
+
+            MessageBox.Show(docsPath, @"See your Documents folder", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
+            printDialog1.Document = printDocument1;
+            printDialog1.UseEXDialog = true;
+
+            if (DialogResult.OK == printDialog1.ShowDialog())
+            {
+                printDocument1.DocumentName = MyFile.NoteFileTitle;
+                printDocument1.Print();
+            }
+        }
+
+        private void printDocument1_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        {
+            try
+            {
+                strFormat = new StringFormat();
+                strFormat.Alignment = StringAlignment.Near;
+                strFormat.LineAlignment = StringAlignment.Center;
+                strFormat.Trimming = StringTrimming.EllipsisCharacter;
+
+                arrColumnLefts.Clear();
+                arrColumnWidths.Clear();
+                iCellHeight = 0;
+                iRow = 0;
+                bFirstPage = true;
+                bNewPage = true;
+
+                // Calculating Total Widths
+                iTotalWidth = 0;
+                foreach (DataGridViewColumn dgvGridCol in dataGridView1.Columns)
+                {
+                    if (dgvGridCol.Visible)
+                        iTotalWidth += dgvGridCol.Width;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            try
+            {
+                //Set the left margin
+                int iLeftMargin = e.MarginBounds.Left;
+                //Set the top margin
+                int iTopMargin = e.MarginBounds.Top;
+                //Whether more pages have to print or not
+                bool bMorePagesToPrint = false;
+                int iTmpWidth;
+
+                //For the first page to print set the cell width and header height
+                if (bFirstPage)
+                {
+                    foreach (DataGridViewColumn GridCol in dataGridView1.Columns)
+                    {
+                        if (!GridCol.Visible)
+                            continue;
+
+                        iTmpWidth = (int)(Math.Floor(GridCol.Width /
+                                                     (double)iTotalWidth * iTotalWidth *
+                                                     (e.MarginBounds.Width / (double)iTotalWidth)));
+
+                        if (GridCol.InheritedStyle != null)
+                            iHeaderHeight = (int)(e.Graphics.MeasureString(GridCol.HeaderText,
+                                                GridCol.InheritedStyle.Font, iTmpWidth).Height) + 11;
+
+                        // Save width and height of headres
+                        arrColumnLefts.Add(iLeftMargin);
+                        arrColumnWidths.Add(iTmpWidth);
+                        iLeftMargin += iTmpWidth;
+                    }
+                }
+                //Loop till all the grid rows not get printed
+                while (iRow <= dataGridView1.Rows.Count - 1)
+                {
+                    DataGridViewRow GridRow = dataGridView1.Rows[iRow];
+                    //Set the cell height
+                    iCellHeight = GridRow.Height + 5;
+                    int iCount = 0;
+                    //Check whether the current page settings allo more rows to print
+                    if (iTopMargin + iCellHeight >= e.MarginBounds.Height + e.MarginBounds.Top)
+                    {
+                        bNewPage = true;
+                        bFirstPage = false;
+                        bMorePagesToPrint = true;
+                        break;
+                    }
+                    else
+                    {
+                        if (bNewPage)
+                        {
+                            //Draw Header
+                            e.Graphics.DrawString(printDocument1.DocumentName, new Font(dataGridView1.Font, FontStyle.Bold),
+                                    Brushes.Black, e.MarginBounds.Left, e.MarginBounds.Top -
+                                    e.Graphics.MeasureString(printDocument1.DocumentName, new Font(dataGridView1.Font,
+                                    FontStyle.Bold), e.MarginBounds.Width).Height - 13);
+
+                            String strDate = DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToShortTimeString();
+                            //Draw Date
+                            e.Graphics.DrawString(strDate, new Font(dataGridView1.Font, FontStyle.Bold),
+                                    Brushes.Black, e.MarginBounds.Left + (e.MarginBounds.Width -
+                                    e.Graphics.MeasureString(strDate, new Font(dataGridView1.Font,
+                                    FontStyle.Bold), e.MarginBounds.Width).Width), e.MarginBounds.Top -
+                                    e.Graphics.MeasureString("Customer Summary", new Font(new Font(dataGridView1.Font,
+                                    FontStyle.Bold), FontStyle.Bold), e.MarginBounds.Width).Height - 13);
+
+                            //Draw Columns                 
+                            iTopMargin = e.MarginBounds.Top;
+                            foreach (DataGridViewColumn GridCol in dataGridView1.Columns)
+                            {
+                                if (!GridCol.Visible)
+                                    continue;
+                                e.Graphics.FillRectangle(new SolidBrush(Color.LightGray),
+                                    new Rectangle((int)arrColumnLefts[iCount], iTopMargin,
+                                    (int)arrColumnWidths[iCount], iHeaderHeight));
+
+                                e.Graphics.DrawRectangle(Pens.Black,
+                                    new Rectangle((int)arrColumnLefts[iCount], iTopMargin,
+                                    (int)arrColumnWidths[iCount], iHeaderHeight));
+
+                                if (GridCol.InheritedStyle != null)
+                                    e.Graphics.DrawString(GridCol.HeaderText, GridCol.InheritedStyle.Font,
+                                        new SolidBrush(GridCol.InheritedStyle.ForeColor),
+                                        new RectangleF((int)arrColumnLefts[iCount], iTopMargin,
+                                            (int)arrColumnWidths[iCount], iHeaderHeight), strFormat);
+                                iCount++;
+                            }
+                            bNewPage = false;
+                            iTopMargin += iHeaderHeight;
+                        }
+                        iCount = 0;
+                        //Draw Columns Contents                
+                        foreach (DataGridViewCell Cel in GridRow.Cells)
+                        {
+                            if (!Cel.Visible)
+                                continue;
+
+                            if (Cel.Value != null)
+                            {
+                                e.Graphics.DrawString(Cel.Value.ToString(), Cel.InheritedStyle.Font,
+                                            new SolidBrush(Cel.InheritedStyle.ForeColor),
+                                            new RectangleF((int)arrColumnLefts[iCount], iTopMargin,
+                                            (int)arrColumnWidths[iCount], iCellHeight), strFormat);
+                            }
+                            //Drawing Cells Borders 
+                            e.Graphics.DrawRectangle(Pens.Black, new Rectangle((int)arrColumnLefts[iCount],
+                                    iTopMargin, (int)arrColumnWidths[iCount], iCellHeight));
+
+                            iCount++;
+                        }
+                    }
+                    iRow++;
+                    iTopMargin += iCellHeight;
+                }
+
+                //If more lines exist, print another page.
+                if (bMorePagesToPrint)
+                    e.HasMorePages = true;
+                else
+                    e.HasMorePages = false;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
+
     }
 }
