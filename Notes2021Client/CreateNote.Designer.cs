@@ -33,7 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxDirMessage = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxTags = new System.Windows.Forms.TextBox();
             this.rtbDoc = new System.Windows.Forms.RichTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -80,12 +80,12 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Tags";
             // 
-            // textBox1
+            // textBoxTags
             // 
-            this.textBox1.Location = new System.Drawing.Point(149, 68);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(799, 23);
-            this.textBox1.TabIndex = 5;
+            this.textBoxTags.Location = new System.Drawing.Point(149, 68);
+            this.textBoxTags.Name = "textBoxTags";
+            this.textBoxTags.Size = new System.Drawing.Size(799, 23);
+            this.textBoxTags.TabIndex = 5;
             // 
             // rtbDoc
             // 
@@ -107,6 +107,7 @@
             this.button1.TabIndex = 7;
             this.button1.Text = "Save";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
@@ -116,6 +117,7 @@
             this.button2.TabIndex = 8;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // CreateNote
             // 
@@ -126,7 +128,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.rtbDoc);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBoxTags);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxDirMessage);
             this.Controls.Add(this.textBoxSubject);
@@ -145,7 +147,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxDirMessage;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxTags;
         private System.Windows.Forms.RichTextBox rtbDoc;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;

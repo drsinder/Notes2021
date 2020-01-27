@@ -1,10 +1,12 @@
-﻿using Notes2021Lib.Data;
+﻿using Notes2021.Models;
+using Notes2021Lib.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Notes2021Client
@@ -22,7 +24,9 @@ namespace Notes2021Client
         private string currentFile;
         private int checkPrint;
 
-       public CreateNote(NoteFile myfile, long baseId, NoteHeader noteHeader, NoteContent noteContent, IEnumerable<Tags> noteTags, IRelistAble myParent)
+        private MarkupConverter.MarkupConverter markupConverter = new MarkupConverter.MarkupConverter();
+
+        public CreateNote(NoteFile myfile, long baseId, NoteHeader noteHeader, NoteContent noteContent, IEnumerable<Tags> noteTags, IRelistAble myParent)
         {
             InitializeComponent();
 
@@ -45,6 +49,40 @@ namespace Notes2021Client
 
                 rtbDoc.Rtf = MarkupConverter.HtmlToRtfConverter.ConvertHtmlToRtf(MyContent.NoteBody);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TextViewModel tv = new TextViewModel()
+            {
+                NoteID = 0,
+                DirectorMessage = textBoxDirMessage.Text,
+                MySubject = textBoxSubject.Text,
+                TagLine = textBoxTags.Text,
+                MyNote = markupConverter.ConvertRtfToHtml(rtbDoc.Rtf),
+                NoteFileID = MyFile.Id,
+                BaseNoteHeaderID = MybaseId
+            };
+
+            if (MyHeader != null)
+            {
+                Actions.EditNote(Program.MyClient, tv, MyHeader.Id);
+            }
+            else
+            {
+                Actions.CreateNote(Program.MyClient, tv);
+            }
+
+            Thread.Sleep(400);
+
+            MyParent.Relist();
+
+            Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
