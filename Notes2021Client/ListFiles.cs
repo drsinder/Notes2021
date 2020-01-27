@@ -43,10 +43,10 @@ namespace Notes2021Client
         private void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             NoteFile myFile = (NoteFile)dataGridView1.Rows[e.RowIndex].DataBoundItem;
-            //new ListNotes(myFile)
-            //{
-            //    Visible = true
-            //};
+            new ListNotes(myFile)
+            {
+                Visible = true
+            };
         }
 
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
@@ -57,10 +57,10 @@ namespace Notes2021Client
             if (dataGridViewRow != null)
             {
                 NoteFile myFile = (NoteFile)dataGridViewRow.DataBoundItem;
-                //new ListNotes(myFile)
-                //{
-                //    Visible = true
-                //};
+                new ListNotes(myFile)
+                {
+                    Visible = true
+                };
             }
         }
 

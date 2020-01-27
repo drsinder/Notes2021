@@ -45,6 +45,7 @@
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new System.Drawing.Size(245, 23);
             this.textBoxEmail.TabIndex = 0;
+            this.textBoxEmail.Text = "sinder@illinois.edu";
             // 
             // label1
             // 

@@ -49,44 +49,44 @@ namespace Notes2021Client
             return obj;
         }
 
-        ///// <summary>
-        ///// Gets a list of base notes for display on index
-        ///// </summary>
-        ///// <param name="MyClient">Populated HttpClient</param>
-        ///// <param name="fileId">Id of target flile</param>
-        ///// <returns>List of Note Headers</returns>
-        //public static List<NoteHeader> GetNoteList(HttpClient MyClient, int fileId)
-        //{
-        //    HttpResponseMessage response = MyClient.GetAsync("api/ApiNotes/" + fileId).Result;
-        //    return response.Content.ReadAsAsync<List<NoteHeader>>().Result;
-        //}
+        /// <summary>
+        /// Gets a list of base notes for display on index
+        /// </summary>
+        /// <param name="MyClient">Populated HttpClient</param>
+        /// <param name="fileId">Id of target flile</param>
+        /// <returns>List of Note Headers</returns>
+        public static List<NoteHeader> GetNoteList(HttpClient MyClient, int fileId)
+        {
+            HttpResponseMessage response = MyClient.GetAsync("api/ApiNotes/" + fileId).Result;
+            return response.Content.ReadAsAsync<List<NoteHeader>>().Result;
+        }
 
-        ///// <summary>
-        ///// Gets the users access token for the file
-        ///// </summary>
-        ///// <param name="MyClient">Populated HttpClient</param>
-        ///// <param name="fileId">Id of file</param>
-        ///// <returns>NoteAccess object for the user in the file</returns>
-        //public static NoteAccess GetAccess(HttpClient MyClient, int fileId)
-        //{
-        //    HttpResponseMessage response2 = MyClient.GetAsync("api/ApiLogin/" + fileId).Result;
-        //    return response2.Content.ReadAsAsync<NoteAccess>().Result;
-        //}
+        /// <summary>
+        /// Gets the users access token for the file
+        /// </summary>
+        /// <param name="MyClient">Populated HttpClient</param>
+        /// <param name="fileId">Id of file</param>
+        /// <returns>NoteAccess object for the user in the file</returns>
+        public static NoteAccess GetAccess(HttpClient MyClient, int fileId)
+        {
+            HttpResponseMessage response2 = MyClient.GetAsync("api/ApiLogin/" + fileId).Result;
+            return response2.Content.ReadAsAsync<NoteAccess>().Result;
+        }
 
-        ///// <summary>
-        ///// Exports as html or text
-        ///// </summary>
-        ///// <param name="MyClient">Populated HttpClient</param>
-        ///// <param name="fileId">file id to export</param>
-        ///// <param name="isHtml">true for html</param>
-        ///// <returns>Stream containing output</returns>
-        //public static Stream Export(HttpClient MyClient, int fileId, bool isHtml)
-        //{
-        //    HttpResponseMessage response = MyClient.GetAsync("api/ApiContent/" + fileId
-        //                        + "/" + isHtml).Result;
+        /// <summary>
+        /// Exports as html or text
+        /// </summary>
+        /// <param name="MyClient">Populated HttpClient</param>
+        /// <param name="fileId">file id to export</param>
+        /// <param name="isHtml">true for html</param>
+        /// <returns>Stream containing output</returns>
+        public static Stream Export(HttpClient MyClient, int fileId, bool isHtml)
+        {
+            HttpResponseMessage response = MyClient.GetAsync("api/ApiContent/" + fileId
+                                + "/" + isHtml).Result;
 
-        //    return response.Content.ReadAsStreamAsync().Result;
-        //}
+            return response.Content.ReadAsStreamAsync().Result;
+        }
 
         /// <summary>
         /// Create a new note
@@ -115,50 +115,50 @@ namespace Notes2021Client
                 new ObjectContent(typeof(TextViewModel), tv, new JsonMediaTypeFormatter())).GetAwaiter().GetResult();
         }
 
-        ///// <summary>
-        ///// Gets header and response headers for a base note
-        ///// </summary>
-        ///// <param name="MyClient">Populated HttpClient</param>
-        ///// <param name="fileId">target file Id</param>
-        ///// <param name="noteOrdinal">Note Ordinal in file</param>
-        ///// <returns>List of Note Headers</returns>
-        //public static IEnumerable<NoteHeader> GetDislayNoteHeadersWithResponses(HttpClient MyClient, int fileId, int noteOrdinal)
-        //{
-        //    HttpResponseMessage response = MyClient.GetAsync("api/ApiNotes/" + fileId + "/" + noteOrdinal).Result;
-        //    return response.Content.ReadAsAsync<IEnumerable<NoteHeader>>().Result;
-        //}
+        /// <summary>
+        /// Gets header and response headers for a base note
+        /// </summary>
+        /// <param name="MyClient">Populated HttpClient</param>
+        /// <param name="fileId">target file Id</param>
+        /// <param name="noteOrdinal">Note Ordinal in file</param>
+        /// <returns>List of Note Headers</returns>
+        public static IEnumerable<NoteHeader> GetDislayNoteHeadersWithResponses(HttpClient MyClient, int fileId, int noteOrdinal)
+        {
+            HttpResponseMessage response = MyClient.GetAsync("api/ApiNotes/" + fileId + "/" + noteOrdinal).Result;
+            return response.Content.ReadAsAsync<IEnumerable<NoteHeader>>().Result;
+        }
 
-        ///// <summary>
-        ///// Gets the content for a note
-        ///// </summary>
-        ///// <param name="MyClient">Populated HttpClient</param>
-        ///// <param name="fileId">target file Id</param>
-        ///// <param name="baseOrdinal">Base note Ordinal</param>
-        ///// <param name="response">Response number - zero for base</param>
-        ///// <returns>NoteContent Object</returns>
-        //public static NoteContent GetNoteContent(HttpClient MyClient, int fileId, int baseOrdinal, int response)
-        //{
-        //    HttpResponseMessage response2 = MyClient.GetAsync("api/ApiNotes/" + fileId
-        //              + "/" + baseOrdinal + "/" + response).Result;
-        //    return response2.Content.ReadAsAsync<NoteContent>().Result;
-        //}
+        /// <summary>
+        /// Gets the content for a note
+        /// </summary>
+        /// <param name="MyClient">Populated HttpClient</param>
+        /// <param name="fileId">target file Id</param>
+        /// <param name="baseOrdinal">Base note Ordinal</param>
+        /// <param name="response">Response number - zero for base</param>
+        /// <returns>NoteContent Object</returns>
+        public static NoteContent GetNoteContent(HttpClient MyClient, int fileId, int baseOrdinal, int response)
+        {
+            HttpResponseMessage response2 = MyClient.GetAsync("api/ApiNotes/" + fileId
+                      + "/" + baseOrdinal + "/" + response).Result;
+            return response2.Content.ReadAsAsync<NoteContent>().Result;
+        }
 
 
-        ///// <summary>
-        ///// Gets the collection of Tags for a note
-        ///// </summary>
-        ///// <param name="MyClient">Populated HttpClient</param>
-        ///// <param name="fileId">Target file Id</param>
-        ///// <param name="baseOrdinal">Ordinal of base note</param>
-        ///// <param name="response">Response number</param>
-        ///// <returns>Collection of Tags</returns>
-        //public static IEnumerable<Tags> GetTags(HttpClient MyClient, int fileId, int baseOrdinal, int response)
-        //{
-        //    HttpResponseMessage response3 = MyClient.GetAsync("api/ApiNotes/" + fileId
-        //                 + "/" + baseOrdinal + "/" + response + "/0").Result;
+        /// <summary>
+        /// Gets the collection of Tags for a note
+        /// </summary>
+        /// <param name="MyClient">Populated HttpClient</param>
+        /// <param name="fileId">Target file Id</param>
+        /// <param name="baseOrdinal">Ordinal of base note</param>
+        /// <param name="response">Response number</param>
+        /// <returns>Collection of Tags</returns>
+        public static IEnumerable<Tags> GetTags(HttpClient MyClient, int fileId, int baseOrdinal, int response)
+        {
+            HttpResponseMessage response3 = MyClient.GetAsync("api/ApiNotes/" + fileId
+                         + "/" + baseOrdinal + "/" + response + "/0").Result;
 
-        //    return response3.Content.ReadAsAsync<IEnumerable<Tags>>().Result;
-        //}
+            return response3.Content.ReadAsAsync<IEnumerable<Tags>>().Result;
+        }
 
         /// <summary>
         /// Deletes a note

@@ -40,7 +40,6 @@ namespace Notes2021Client
 
                 AuthToken = login.token;
                 MyClient.DefaultRequestHeaders.Add("authentication", login.token);
-                //Application.Run(new ListFiles());
                 Application.Run(new ListFiles());
             }
 
