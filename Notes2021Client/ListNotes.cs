@@ -127,10 +127,10 @@ namespace Notes2021Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //new CreateNote(MyFile, 0, null, null, null, this)
-            //{
-            //    Visible = true
-            //};
+            new CreateNote(MyFile, 0, null, null, null, this)
+            {
+                Visible = true
+            };
         }
 
         private void button2_Click(object sender, EventArgs e)
