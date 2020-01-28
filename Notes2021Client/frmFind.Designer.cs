@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmFind));
             this.label1 = new System.Windows.Forms.Label();
             this.txtSearchTerm = new System.Windows.Forms.TextBox();
             this.chkMatchCase = new System.Windows.Forms.CheckBox();
@@ -93,6 +94,7 @@
             this.Controls.Add(this.chkMatchCase);
             this.Controls.Add(this.txtSearchTerm);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmFind";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmFind";
