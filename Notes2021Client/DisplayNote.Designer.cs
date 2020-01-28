@@ -46,7 +46,6 @@
             this.buttonNResp = new System.Windows.Forms.Button();
             this.buttonPResp = new System.Windows.Forms.Button();
             this.buttonBase = new System.Windows.Forms.Button();
-            this.printDialog1 = new System.Windows.Forms.PrintDialog();
             this.webBrowserPrint = new System.Windows.Forms.WebBrowser();
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.SuspendLayout();
@@ -227,10 +226,6 @@
             this.buttonBase.UseVisualStyleBackColor = true;
             this.buttonBase.Click += new System.EventHandler(this.buttonBase_Click);
             // 
-            // printDialog1
-            // 
-            this.printDialog1.UseEXDialog = true;
-            // 
             // webBrowserPrint
             // 
             this.webBrowserPrint.Location = new System.Drawing.Point(414, 13);
@@ -270,6 +265,7 @@
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.webBrowserPrint);
             this.Name = "DisplayNote";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DisplayNote";
             this.ResumeLayout(false);
             this.PerformLayout();

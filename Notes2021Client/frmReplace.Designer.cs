@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmReplace));
             this.Label1 = new System.Windows.Forms.Label();
             this.txtSearchTerm = new System.Windows.Forms.TextBox();
             this.Label2 = new System.Windows.Forms.Label();
@@ -43,51 +42,57 @@
             // Label1
             // 
             this.Label1.AutoSize = true;
-            this.Label1.Location = new System.Drawing.Point(8, 18);
+            this.Label1.Location = new System.Drawing.Point(9, 21);
+            this.Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(71, 13);
+            this.Label1.Size = new System.Drawing.Size(74, 15);
             this.Label1.TabIndex = 6;
             this.Label1.Text = "Search Term:";
             // 
             // txtSearchTerm
             // 
-            this.txtSearchTerm.Location = new System.Drawing.Point(10, 34);
+            this.txtSearchTerm.Location = new System.Drawing.Point(12, 39);
+            this.txtSearchTerm.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtSearchTerm.Name = "txtSearchTerm";
-            this.txtSearchTerm.Size = new System.Drawing.Size(321, 20);
+            this.txtSearchTerm.Size = new System.Drawing.Size(374, 23);
             this.txtSearchTerm.TabIndex = 7;
             this.txtSearchTerm.TextChanged += new System.EventHandler(this.txtSearchTerm_TextChanged);
             // 
             // Label2
             // 
             this.Label2.AutoSize = true;
-            this.Label2.Location = new System.Drawing.Point(8, 71);
+            this.Label2.Location = new System.Drawing.Point(9, 82);
+            this.Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(97, 13);
+            this.Label2.Size = new System.Drawing.Size(103, 15);
             this.Label2.TabIndex = 11;
             this.Label2.Text = "Replacement Text:";
             // 
             // txtReplacementText
             // 
-            this.txtReplacementText.Location = new System.Drawing.Point(10, 87);
+            this.txtReplacementText.Location = new System.Drawing.Point(12, 100);
+            this.txtReplacementText.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtReplacementText.Name = "txtReplacementText";
-            this.txtReplacementText.Size = new System.Drawing.Size(320, 20);
+            this.txtReplacementText.Size = new System.Drawing.Size(373, 23);
             this.txtReplacementText.TabIndex = 12;
             // 
             // chkMatchCase
             // 
             this.chkMatchCase.AutoSize = true;
-            this.chkMatchCase.Location = new System.Drawing.Point(10, 113);
+            this.chkMatchCase.Location = new System.Drawing.Point(12, 130);
+            this.chkMatchCase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.chkMatchCase.Name = "chkMatchCase";
-            this.chkMatchCase.Size = new System.Drawing.Size(83, 17);
+            this.chkMatchCase.Size = new System.Drawing.Size(88, 19);
             this.chkMatchCase.TabIndex = 13;
             this.chkMatchCase.Text = "Match Case";
             this.chkMatchCase.UseVisualStyleBackColor = true;
             // 
             // btnFind
             // 
-            this.btnFind.Location = new System.Drawing.Point(11, 149);
+            this.btnFind.Location = new System.Drawing.Point(13, 172);
+            this.btnFind.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(75, 21);
+            this.btnFind.Size = new System.Drawing.Size(88, 24);
             this.btnFind.TabIndex = 14;
             this.btnFind.Text = "&Find";
             this.btnFind.UseVisualStyleBackColor = true;
@@ -96,9 +101,10 @@
             // btnFindNext
             // 
             this.btnFindNext.Enabled = false;
-            this.btnFindNext.Location = new System.Drawing.Point(92, 149);
+            this.btnFindNext.Location = new System.Drawing.Point(107, 172);
+            this.btnFindNext.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFindNext.Name = "btnFindNext";
-            this.btnFindNext.Size = new System.Drawing.Size(75, 21);
+            this.btnFindNext.Size = new System.Drawing.Size(88, 24);
             this.btnFindNext.TabIndex = 15;
             this.btnFindNext.Text = "Find &Next";
             this.btnFindNext.UseVisualStyleBackColor = true;
@@ -106,9 +112,10 @@
             // 
             // btnReplace
             // 
-            this.btnReplace.Location = new System.Drawing.Point(173, 149);
+            this.btnReplace.Location = new System.Drawing.Point(202, 172);
+            this.btnReplace.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnReplace.Name = "btnReplace";
-            this.btnReplace.Size = new System.Drawing.Size(75, 21);
+            this.btnReplace.Size = new System.Drawing.Size(88, 24);
             this.btnReplace.TabIndex = 16;
             this.btnReplace.Text = "&Replace";
             this.btnReplace.UseVisualStyleBackColor = true;
@@ -116,9 +123,10 @@
             // 
             // btnReplaceAll
             // 
-            this.btnReplaceAll.Location = new System.Drawing.Point(254, 149);
+            this.btnReplaceAll.Location = new System.Drawing.Point(296, 172);
+            this.btnReplaceAll.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnReplaceAll.Name = "btnReplaceAll";
-            this.btnReplaceAll.Size = new System.Drawing.Size(75, 21);
+            this.btnReplaceAll.Size = new System.Drawing.Size(88, 24);
             this.btnReplaceAll.TabIndex = 17;
             this.btnReplaceAll.Text = "Replace &All";
             this.btnReplaceAll.UseVisualStyleBackColor = true;
@@ -126,9 +134,9 @@
             // 
             // frmReplace
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(343, 189);
+            this.ClientSize = new System.Drawing.Size(400, 218);
             this.Controls.Add(this.btnReplaceAll);
             this.Controls.Add(this.btnReplace);
             this.Controls.Add(this.btnFindNext);
@@ -138,9 +146,9 @@
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.txtSearchTerm);
             this.Controls.Add(this.Label1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "frmReplace";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Notes - Replace Text";
             this.ResumeLayout(false);
             this.PerformLayout();

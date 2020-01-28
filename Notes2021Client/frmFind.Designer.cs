@@ -94,6 +94,7 @@
             this.Controls.Add(this.txtSearchTerm);
             this.Controls.Add(this.label1);
             this.Name = "frmFind";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmFind";
             this.ResumeLayout(false);
             this.PerformLayout();
