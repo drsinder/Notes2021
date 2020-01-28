@@ -754,8 +754,8 @@ namespace Notes2021Client
         {
             try
             {
-                //frmFind f = new frmFind(this);
-                //f.Show();
+                frmFind f = new frmFind(this);
+                f.Show();
             }
             catch (Exception ex)
             {
@@ -926,8 +926,8 @@ namespace Notes2021Client
 
         private void tbrFind_Click(object sender, System.EventArgs e)
         {
-            //frmFind f = new frmFind(this);
-            //f.Show();
+            frmFind f = new frmFind(this);
+            f.Show();
         }
 
 

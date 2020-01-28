@@ -6,7 +6,7 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-
+        public System.Windows.Forms.RichTextBox rtbDoc2;
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -781,6 +781,7 @@
             this.tbrFind.Size = new System.Drawing.Size(23, 22);
             this.tbrFind.Text = "Find";
             this.tbrFind.Click += new System.EventHandler(this.tbrFind_Click);
+            this.rtbDoc2 = this.rtbDoc;
             // 
             // CreateNote
             // 
