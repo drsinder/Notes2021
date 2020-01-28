@@ -586,8 +586,116 @@ namespace Notes2021.Controllers
                 newNote = await NoteDataManager.CreateResponse(_db, _userManager, nheader, model.MyNote, model.TagLine, model.DirectorMessage, true, false);
             }
 
+            List<LinkQueue> items = await _db.LinkQueue.Where(p => p.Enqueued == false).ToListAsync();
+            foreach( LinkQueue item in items)
+            {
+                LinkProcessor lp = new LinkProcessor(_db);
+                BackgroundJob.Enqueue(() => lp.ProcessLinkAction(item.Id));
+                item.Enqueued = true;
+                _db.Update(item);
+            }
+            if (items.Count > 0)
+                await _db.SaveChangesAsync();
+
+            //TODO
+            //await SendNewNoteToSubscribers(_db, _userManager, newNote);
+
             return RedirectToAction("Display", new { id = newNote.Id });
         }
+
+        //private static async Task SendNewNoteToSubscribers(ApplicationDbContext db, UserManager<IdentityUser> userManager, NoteHeader nc)
+        //{
+        //    nc.NoteFile.NoteHeaders = null;
+        //    ForwardViewModel fv = new ForwardViewModel()
+        //    {
+        //        NoteSubject = "New Note from Notes 2021"
+        //    };
+        //    List<Subscription> subs = await db.Subscription
+        //        .Where(p => p.NoteFileId == nc.NoteFileId)
+        //        .ToListAsync();
+
+        //    List<string> emails = new List<string>();
+
+        //    fv.ToEmail = "xx";
+        //    fv.FileID = nc.NoteFileId;
+        //    fv.hasstring = false;
+        //    fv.NoteID = nc.Id;
+        //    fv.NoteOrdinal = nc.NoteOrdinal;
+        //    fv.NoteSubject = nc.NoteSubject;
+        //    fv.toAllUsers = false;
+        //    fv.IsAdmin = false;
+        //    fv.wholestring = false;
+
+        //    string payload = await MakeNoteForEmail(fv, db, "BackgroundJob", "Notes 2021");
+
+        //    foreach (Subscription s in subs)
+        //    {
+        //        UserAuxData usr = await db.UserData.SingleAsync(p => p.UserId == s.SubscriberId);
+        //        NoteAccess myAccess = await AccessManager.GetAccess(db, usr.UserId, nc.NoteFileId, 0);
+
+        //        if (myAccess.ReadAccess)
+        //        {
+        //            //emails.Add(usr.Email);
+        //        }
+        //    }
+
+        //    if (emails.Count > 0)
+        //    {
+        //        string payload = await MakeNoteForEmail(fv, db, "BackgroundJob", "Notes 2021");
+        //        await Globals.EmailSender.SendEmailListAsync(emails, fv.NoteSubject, payload);
+        //    }
+        //}
+
+
+        //private static async Task<string> MakeNoteForEmail(ForwardViewModel fv, ApplicationDbContext db, string email, string name)
+        //{
+        //    NoteHeader nc = await GetNoteByIdWithFile(db, fv.NoteID);
+
+        //    if (!fv.hasstring || !fv.wholestring)
+        //    {
+        //        return "Forwarded by Notes 2021 - User: " + email + " / " + name
+        //            + "<p>File: " + nc.NoteFile.NoteFileName + " - File Title: " + nc.NoteFile.NoteFileTitle + "</p><hr/>"
+        //            + "<p>Author: " + nc.AuthorName + "  - Director Message: " + nc.NoteContent.DirectorMessage + "</p><p>"
+        //            + "<p>Subject: " + nc.NoteSubject + "</p>"
+        //            + nc.LastEdited.ToShortDateString() + " " + nc.LastEdited.ToShortTimeString() + " UTC" + "</p>"
+        //            + nc.NoteContent.NoteBody
+        //            + "<hr/>" + "<a href=\"" + Globals.ProductionUrl + "NoteDisplay/Display/" + fv.NoteID + "\" >Link to note</a>";
+        //    }
+        //    else
+        //    {
+        //        List<NoteHeader> bnhl = await GetBaseNoteHeadersForNote(db, nc.NoteFileId, nc.NoteOrdinal);
+        //        NoteHeader bnh = bnhl[0];
+        //        fv.NoteSubject = bnh.NoteSubject;
+        //        List<NoteHeader> notes = await GetBaseNoteAndResponses(db, nc.NoteFileId, nc.NoteOrdinal);
+
+        //        StringBuilder sb = new StringBuilder();
+        //        sb.Append("Forwarded by Notes 2020 - User: " + email + " / " + name
+        //            + "<p>\nFile: " + nc.NoteFile.NoteFileName + " - File Title: " + nc.NoteFile.NoteFileTitle + "</p>"
+        //            + "<hr/>");
+
+        //        for (int i = 0; i < notes.Count; i++)
+        //        {
+        //            if (i == 0)
+        //            {
+        //                sb.Append("<p>Base Note - " + (notes.Count - 1) + " Response(s)</p>");
+        //            }
+        //            else
+        //            {
+        //                sb.Append("<hr/><p>Response - " + notes[i].ResponseOrdinal + " of " + (notes.Count - 1) + "</p>");
+        //            }
+        //            sb.Append("<p>Author: " + notes[i].AuthorName + "  - Director Message: " + notes[i].NoteContent.DirectorMessage + "</p>");
+        //            sb.Append("<p>Subject: " + notes[i].NoteSubject + "</p>");
+        //            sb.Append("<p>" + notes[i].LastEdited.ToShortDateString() + " " + notes[i].LastEdited.ToShortTimeString() + " UTC" + " </p>");
+        //            sb.Append(notes[i].NoteContent.NoteBody);
+        //            sb.Append("<hr/>");
+        //            sb.Append("<a href=\"");
+        //            sb.Append(Globals.ProductionUrl + "NoteDisplay/Display/" + notes[i].Id + "\" >Link to note</a>");
+        //        }
+
+        //        return sb.ToString();
+        //    }
+
+        //}
 
         /// <summary>
         /// Given a FileID and NoteOrdinal get the Base Note NoteID
@@ -1072,6 +1180,18 @@ namespace Notes2021.Controllers
             //_userManager.GetUserId(User);
             NoteHeader nc = await NoteDataManager.GetNoteById(_db, id);
             await NoteDataManager.DeleteNote(_db, nc);
+
+            List<LinkQueue> items = await _db.LinkQueue.Where(p => p.Enqueued == false).ToListAsync();
+            foreach (LinkQueue item in items)
+            {
+                LinkProcessor lp = new LinkProcessor(_db);
+                BackgroundJob.Enqueue(() => lp.ProcessLinkAction(item.Id));
+                item.Enqueued = true;
+                _db.Update(item);
+            }
+            if (items.Count > 0)
+                await _db.SaveChangesAsync();
+
             return RedirectToAction("Listing", new { id = nc.NoteFileId });
         }
 

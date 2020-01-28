@@ -14,73 +14,6 @@ namespace Notes2021Lib.Manager
 {
     public static class NoteDataManager
     {
-        public static UserAuxData GetUserAuxData(UserManager<IdentityUser> userManager, ClaimsPrincipal user, ApplicationDbContext db)
-        {
-            UserAuxData aux = null;
-            try
-            {
-                string userid = userManager.GetUserId(user);
-                aux = db.UserData.SingleOrDefault(p => p.UserId == userid);
-            }
-            catch
-            { }
-            return aux;
-        }
-
-        public static string GetUserDisplayName(UserManager<IdentityUser> userManager, ClaimsPrincipal user, ApplicationDbContext db)
-        {
-            UserAuxData aux = null;
-            string myName = " ";
-            try
-            {
-                string userid = userManager.GetUserId(user);
-                aux = db.UserData.SingleOrDefault(p => p.UserId == userid);
-                myName = aux.DisplayName;
-            }
-            catch
-            { }
-
-            return myName;
-        }
-
-
-        public static string GetSafeUserDisplayName(UserManager<IdentityUser> userManager, ClaimsPrincipal user, ApplicationDbContext db)
-        {
-            string uName = GetUserDisplayName(userManager, user, db);
-            return uName.Replace(" ", "_");
-        }
-
-        public static async Task<Search> GetUserSearch(ApplicationDbContext db, string userid)
-        {
-            return await db.Search
-                .Where(p => p.UserId == userid)
-                .FirstOrDefaultAsync();
-        }
-
-        public static async Task<NoteHeader> GetNoteById(ApplicationDbContext db, long noteid)
-        {
-            return await db.NoteHeader
-                .Include("NoteContent")
-                .Include("Tags")
-                .Where(p => p.Id == noteid)
-                .FirstOrDefaultAsync();
-        }
-
-        public static async Task<NoteFile> GetFileByName(ApplicationDbContext db, string fname)
-        {
-            return await db.NoteFile
-                .Where(p => p.NoteFileName == fname)
-                .FirstOrDefaultAsync();
-        }
-
-        public static async Task<List<NoteFile>> GetNoteFilesOrderedByNameWithOwner(ApplicationDbContext db)
-        {
-            return await db.NoteFile
-                .Include(a => a.Owner)
-                .OrderBy(p => p.NoteFileName)
-                .ToListAsync();
-        }
-
         /// <summary>
         /// Create a NoteFile
         /// </summary>
@@ -180,6 +113,478 @@ namespace Notes2021Lib.Manager
 
             return true;
         }
+
+        public static void ArchiveNoteFile(ApplicationDbContext _db, NoteFile noteFile)
+        {
+            noteFile.NumberArchives++;
+            _db.Update(noteFile);
+
+            List<NoteHeader> nhl = _db.NoteHeader.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
+
+            foreach (NoteHeader nh in nhl)
+            {
+                nh.ArchiveId = noteFile.NumberArchives;
+                _db.Update(nh);
+            }
+
+            List<NoteAccess> nal = _db.NoteAccess.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
+            foreach (NoteAccess na in nal)
+            {
+                na.ArchiveId = noteFile.NumberArchives;
+            }
+            _db.NoteAccess.AddRange(nal);
+
+            List<Tags> ntl = _db.Tags.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
+            foreach (Tags nt in ntl)
+            {
+                nt.ArchiveId = noteFile.NumberArchives;
+                _db.Update(nt);
+            }
+
+            _db.SaveChanges();
+        }
+
+        public static async Task<NoteHeader> CreateNote(ApplicationDbContext db, UserManager<IdentityUser> userManager, NoteHeader nh, string body, string tags, string dMessage, bool send, bool linked)
+        {
+            if (nh.ResponseOrdinal == 0)  // base note
+            {
+                nh.NoteOrdinal = await NextBaseNoteOrdinal(db, nh.NoteFileId, nh.ArchiveId);
+            }
+
+            if (!linked)
+            {
+                nh.LinkGuid = Guid.NewGuid().ToString();
+            }
+
+            if (!send) // indicates an import operation / adjust time to UCT / assume original was CST = UCT-06, so add 6 hours
+            {
+                int offset = 6;
+                if (nh.LastEdited.IsDaylightSavingTime())
+                    offset--;
+
+                Random rand = new Random();
+                int ms = rand.Next(999);
+
+                nh.LastEdited = nh.LastEdited.AddHours(offset).AddMilliseconds(ms);
+                nh.CreateDate = nh.LastEdited;
+                nh.ThreadLastEdited = nh.CreateDate;
+            }
+
+            NoteFile nf = await db.NoteFile
+                .Where(p => p.Id == nh.NoteFileId)
+                .FirstOrDefaultAsync();
+
+            nf.LastEdited = nh.CreateDate;
+            db.Entry(nf).State = EntityState.Modified;
+            db.NoteHeader.Add(nh);
+            await db.SaveChangesAsync();
+
+            NoteHeader newHeader = nh;
+
+            if (newHeader.ResponseOrdinal == 0)
+            {
+                newHeader.BaseNoteId = newHeader.Id;
+                db.Entry(newHeader).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+            }
+            else
+            {
+                NoteHeader baseNote = await db.NoteHeader
+                    .Where(p => p.NoteFileId == newHeader.NoteFileId && p.ArchiveId == newHeader.ArchiveId && p.NoteOrdinal == newHeader.NoteOrdinal && p.ResponseOrdinal == 0)
+                    .FirstOrDefaultAsync();
+
+                newHeader.BaseNoteId = baseNote.Id;
+                db.Entry(newHeader).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+
+            }
+
+            NoteContent newContent = new NoteContent()
+            {
+                NoteHeaderId = newHeader.Id,
+                NoteBody = body,
+                DirectorMessage = dMessage
+            };
+            db.NoteContent.Add(newContent);
+            await db.SaveChangesAsync();
+
+            // deal with tags
+
+            if (tags != null && tags.Length > 1)
+            {
+                var theTags = Tags.StringToList(tags, newHeader.Id, newHeader.NoteFileId, newHeader.ArchiveId);
+
+                if (theTags.Count > 0)
+                {
+                    await db.Tags.AddRangeAsync(theTags);
+                    await db.SaveChangesAsync();
+                }
+            }
+
+            // Check for linked notefile(s)
+
+            List<LinkedFile> links = await db.LinkedFile.Where(p => p.HomeFileId == newHeader.NoteFileId && p.SendTo).ToListAsync();
+
+            if (linked || links == null || links.Count < 1)
+            {
+
+            }
+            else
+            {
+                foreach (var link in links)
+                {
+                    if (link.SendTo)
+                    {
+                        LinkQueue q = new LinkQueue
+                        {
+                            Activity = newHeader.ResponseOrdinal == 0 ? LinkAction.CreateBase : LinkAction.CreateResponse,
+                            LinkGuid = newHeader.LinkGuid,
+                            LinkedFileId = newHeader.NoteFileId,
+                            BaseUri = link.RemoteBaseUri
+                        };
+
+                        db.LinkQueue.Add(q);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+
+            return newHeader;
+        }
+
+
+
+        public static async Task<NoteHeader> CreateResponse(ApplicationDbContext db, UserManager<IdentityUser> userManager, NoteHeader nh, string body, string tags, string dMessage, bool send, bool linked)
+        {
+            NoteHeader mine = await GetBaseNoteHeader(db, nh.BaseNoteId);
+            db.Entry(mine).State = EntityState.Unchanged;
+            await db.SaveChangesAsync();
+
+            mine.ThreadLastEdited = DateTime.Now.ToUniversalTime();
+            mine.ResponseCount++;
+
+            db.Entry(mine).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+
+            nh.ResponseOrdinal = mine.ResponseCount;
+            nh.NoteOrdinal = mine.NoteOrdinal;
+            return await CreateNote(db, userManager, nh, body, tags, dMessage, send, linked);
+        }
+
+        /// <summary>
+        /// Delete a Note
+        /// </summary>
+        /// <param name="db">ApplicationDbContext</param>
+        /// <param name="nc">NoteContent</param>
+        /// <returns></returns>
+        public static async Task<bool> DeleteNote(ApplicationDbContext db, NoteHeader nc)
+        {
+            if (nc.ResponseOrdinal == 0)     // base note
+            {
+                return await DeleteBaseNote(db, nc);
+            }
+            else  // Response
+            {
+                return await DeleteResponse(db, nc);
+            }
+        }
+
+        /// <summary>
+        /// Delete a Base Note
+        /// </summary>
+        /// <param name="db">ApplicationDbContext</param>
+        /// <param name="nc">NoteContent</param>
+        /// <returns></returns>
+        // Steps involved:
+        // 1. Delete all NoteContent rows where NoteFileID, NoteOrdinal match input
+        // 2. Delete single row in BaseNoteHeader where NoteFileID, NoteOrdinal match input
+        // 3. Decrement all BaseNoteHeader.NoteOrdinal where NoteFileID match input and
+        //    BaseNoteHeader.NoteOrdinal > nc.NoteOrdinal
+        // 4. Decrement all NoteContent.NoteOrdinal where NoteFileID match input and NoteContent.NoteOrdinal > nc.NoteOrdinal
+        private static async Task<bool> DeleteBaseNote(ApplicationDbContext db, NoteHeader nc)
+        {
+            int fileId = nc.NoteFileId;
+            int arcId = nc.ArchiveId;
+            int noteOrd = nc.NoteOrdinal;
+
+            try
+            {
+                List<NoteHeader> deleteCont = await GetNoteContentList(db, fileId, arcId, noteOrd);
+
+                foreach (var nh in deleteCont)
+                {
+                    await DeleteLinked(db, nh);
+                }
+
+                db.NoteHeader.RemoveRange(deleteCont);
+
+                List<NoteHeader> upBase = await db.NoteHeader
+                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal > noteOrd)
+                    .ToListAsync();
+
+                foreach (var cont in upBase)
+                {
+                    cont.NoteOrdinal--;
+                    db.Entry(cont).State = EntityState.Modified;
+                }
+
+                await db.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Delete a Response Note
+        /// </summary>
+        /// <param name="db">ApplicationDbContext</param>
+        /// <param name="nc">NoteContent</param>
+        /// <returns></returns>
+        // Steps involved:
+        // 1. Delete single NoteContent row where NoteFileID, NoteOrdinal, and ResponseOrdinal match input
+        // 2. Decrement all NoteContent.ResponseOrdinal where NoteFileID, and NoteOrdinal match input and NoteContent.ResponseOrdinal > nc.ResponseOrdinal
+        // 3. Decrement single row (Responses field)in BaseNoteHeader where NoteFileID, NoteOrdinal match input
+        private static async Task<bool> DeleteResponse(ApplicationDbContext db, NoteHeader nc)
+        {
+            int fileId = nc.NoteFileId;
+            int arcId = nc.ArchiveId;
+            int noteOrd = nc.NoteOrdinal;
+            int respOrd = nc.ResponseOrdinal;
+
+            try
+            {
+                List<NoteHeader> deleteCont = await db.NoteHeader
+                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal == noteOrd && p.ResponseOrdinal == nc.ResponseOrdinal)
+                    .ToListAsync();
+
+                if (deleteCont.Count != 1)
+                    return false;
+
+                await DeleteLinked(db, deleteCont.First());
+
+                db.NoteHeader.Remove(deleteCont.First());
+
+                List<NoteHeader> upCont = await db.NoteHeader
+                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal == noteOrd && p.ResponseOrdinal > respOrd)
+                    .ToListAsync();
+
+                foreach (var cont in upCont)
+                {
+                    cont.ResponseOrdinal--;
+                    db.Entry(cont).State = EntityState.Modified;
+                }
+
+                NoteHeader bnh = await GetBaseNoteHeader(db, fileId, arcId, noteOrd);
+
+                bnh.ResponseCount--;
+                db.Entry(bnh).State = EntityState.Modified;
+
+                await db.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return false;
+        }
+
+
+        public static async Task<string> DeleteLinked(ApplicationDbContext db, NoteHeader nh)
+        {
+            // Check for linked notefile(s)
+
+            List<LinkedFile> links = await db.LinkedFile.Where(p => p.HomeFileId == nh.NoteFileId).ToListAsync();
+
+            if (links == null || links.Count < 1)
+            {
+
+            }
+            else
+            {
+                foreach (var link in links)
+                {
+                    if (link.SendTo)
+                    {
+                        LinkQueue q = new LinkQueue
+                        {
+                            Activity = LinkAction.Delete,
+                            LinkGuid = nh.LinkGuid,
+                            LinkedFileId = nh.NoteFileId,
+                            BaseUri = link.RemoteBaseUri
+                        };
+
+                        db.LinkQueue.Add(q);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+
+            return "Ok";
+        }
+
+ 
+        public static async Task<NoteHeader> EditNote(ApplicationDbContext db, UserManager<IdentityUser> userManager, NoteHeader nh, NoteContent nc, string tags)
+        {
+            NoteHeader eHeader = await GetBaseNoteHeader(db, nh.Id);
+            eHeader.LastEdited = nh.LastEdited;
+            eHeader.ThreadLastEdited = nh.ThreadLastEdited;
+            eHeader.NoteSubject = nh.NoteSubject;
+            db.Entry(eHeader).State = EntityState.Modified;
+
+            NoteContent eContent = await GetNoteContent(db, nh.NoteFileId, nh.ArchiveId, nh.NoteOrdinal, nh.ResponseOrdinal);
+            eContent.NoteBody = nc.NoteBody;
+            eContent.DirectorMessage = nc.DirectorMessage;
+            db.Entry(eContent).State = EntityState.Modified;
+
+            List<Tags> oTags = await GetNoteTags(db, nh.NoteFileId, nh.ArchiveId, nh.NoteOrdinal, nh.ResponseOrdinal, 0);
+            db.Tags.RemoveRange(oTags);
+
+            db.UpdateRange(oTags);
+            db.Update(eHeader);
+            db.Update(eContent);
+
+            await db.SaveChangesAsync();
+
+            // deal with tags
+
+            if (tags != null && tags.Length > 1)
+            {
+                var theTags = Tags.StringToList(tags, eHeader.Id, eHeader.NoteFileId, eHeader.ArchiveId);
+
+                if (theTags.Count > 0)
+                {
+                    await db.Tags.AddRangeAsync(theTags);
+                    await db.SaveChangesAsync();
+                }
+            }
+
+            // Check for linked notefile(s)
+
+            List<LinkedFile> links = await db.LinkedFile.Where(p => p.HomeFileId == eHeader.NoteFileId && p.SendTo).ToListAsync();
+
+            if (links == null || links.Count < 1)
+            {
+
+            }
+            else
+            {
+                foreach (var link in links)
+                {
+                    if (link.SendTo)
+                    {
+                        LinkQueue q = new LinkQueue
+                        {
+                            Activity = LinkAction.Edit,
+                            LinkGuid = eHeader.LinkGuid,
+                            LinkedFileId = eHeader.NoteFileId,
+                            BaseUri = link.RemoteBaseUri
+                        };
+
+                        db.LinkQueue.Add(q);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+
+            return eHeader;
+        }
+
+        public static async Task<NoteContent> GetNoteContent(ApplicationDbContext db, int nfid, int ArcId, int noteord, int respOrd)
+        {
+            var header = await db.NoteHeader
+                .Where(p => p.NoteFileId == nfid && p.ArchiveId == ArcId && p.NoteOrdinal == noteord && p.ResponseOrdinal == respOrd)
+                .FirstAsync();
+
+            if (header == null)
+                return null;
+
+            var content = await db.NoteContent
+                .OfType<NoteContent>()
+                .Where(p => p.NoteHeaderId == header.Id)
+                .FirstAsync();
+
+            content.NoteHeader = null;
+
+            return content;
+        }
+
+
+        public static UserAuxData GetUserAuxData(UserManager<IdentityUser> userManager, ClaimsPrincipal user, ApplicationDbContext db)
+        {
+            UserAuxData aux = null;
+            try
+            {
+                string userid = userManager.GetUserId(user);
+                aux = db.UserData.SingleOrDefault(p => p.UserId == userid);
+            }
+            catch
+            { }
+            return aux;
+        }
+
+        public static string GetUserDisplayName(UserManager<IdentityUser> userManager, ClaimsPrincipal user, ApplicationDbContext db)
+        {
+            UserAuxData aux = null;
+            string myName = " ";
+            try
+            {
+                string userid = userManager.GetUserId(user);
+                aux = db.UserData.SingleOrDefault(p => p.UserId == userid);
+                myName = aux.DisplayName;
+            }
+            catch
+            { }
+
+            return myName;
+        }
+
+
+        public static string GetSafeUserDisplayName(UserManager<IdentityUser> userManager, ClaimsPrincipal user, ApplicationDbContext db)
+        {
+            string uName = GetUserDisplayName(userManager, user, db);
+            return uName.Replace(" ", "_");
+        }
+
+        public static async Task<Search> GetUserSearch(ApplicationDbContext db, string userid)
+        {
+            return await db.Search
+                .Where(p => p.UserId == userid)
+                .FirstOrDefaultAsync();
+        }
+
+        public static async Task<NoteHeader> GetNoteById(ApplicationDbContext db, long noteid)
+        {
+            return await db.NoteHeader
+                .Include("NoteContent")
+                .Include("Tags")
+                .Where(p => p.Id == noteid)
+                .FirstOrDefaultAsync();
+        }
+
+        public static async Task<NoteFile> GetFileByName(ApplicationDbContext db, string fname)
+        {
+            return await db.NoteFile
+                .Where(p => p.NoteFileName == fname)
+                .FirstOrDefaultAsync();
+        }
+
+        public static async Task<List<NoteFile>> GetNoteFilesOrderedByNameWithOwner(ApplicationDbContext db)
+        {
+            return await db.NoteFile
+                .Include(a => a.Owner)
+                .OrderBy(p => p.NoteFileName)
+                .ToListAsync();
+        }
+
 
         public static async Task<NoteFile> GetFileByIdWithOwner(ApplicationDbContext db, int id)
         {
@@ -322,216 +727,6 @@ namespace Notes2021Lib.Manager
             return tags;
         }
 
-        public static async Task<NoteHeader> EditNote(ApplicationDbContext db, UserManager<IdentityUser> userManager, NoteHeader nh, NoteContent nc, string tags)
-        {
-            NoteHeader eHeader = await GetBaseNoteHeader(db, nh.Id);
-            eHeader.LastEdited = nh.LastEdited;
-            eHeader.ThreadLastEdited = nh.ThreadLastEdited;
-            eHeader.NoteSubject = nh.NoteSubject;
-            db.Entry(eHeader).State = EntityState.Modified;
-
-            NoteContent eContent = await GetNoteContent(db, nh.NoteFileId, nh.ArchiveId, nh.NoteOrdinal, nh.ResponseOrdinal);
-            eContent.NoteBody = nc.NoteBody;
-            eContent.DirectorMessage = nc.DirectorMessage;
-            db.Entry(eContent).State = EntityState.Modified;
-
-            List<Tags> oTags = await GetNoteTags(db, nh.NoteFileId, nh.ArchiveId, nh.NoteOrdinal, nh.ResponseOrdinal, 0);
-            db.Tags.RemoveRange(oTags);
-
-            db.UpdateRange(oTags);
-            db.Update(eHeader);
-            db.Update(eContent);
-
-            await db.SaveChangesAsync();
-
-            // deal with tags
-
-            if (tags != null && tags.Length > 1)
-            {
-                var theTags = Tags.StringToList(tags, eHeader.Id, eHeader.NoteFileId, eHeader.ArchiveId);
-
-                if (theTags.Count > 0)
-                {
-                    await db.Tags.AddRangeAsync(theTags);
-                    await db.SaveChangesAsync();
-                }
-            }
-
-            // Check for linked notefile(s)
-
-            List<LinkedFile> links = await db.LinkedFile.Where(p => p.HomeFileId == eHeader.NoteFileId && p.SendTo).ToListAsync();
-
-            if (links == null || links.Count < 1)
-            {
-
-            }
-            else
-            {
-                foreach (var link in links)
-                {
-                    if (link.SendTo)
-                    {
-                        LinkQueue q = new LinkQueue
-                        {
-                            Activity = LinkAction.Edit,
-                            LinkGuid = eHeader.LinkGuid,
-                            LinkedFileId = eHeader.NoteFileId,
-                            BaseUri = link.RemoteBaseUri
-                        };
-
-                        db.LinkQueue.Add(q);
-                        await db.SaveChangesAsync();
-
-                        //TODO!!
-                        //LinkProcessor lp = new LinkProcessor(db);
-                        //BackgroundJob.Enqueue(() => lp.ProcessLinkAction(q.Id));
-                    }
-                }
-            }
-
-            return eHeader;
-        }
-
-        public static async Task<NoteHeader> CreateNote(ApplicationDbContext db, UserManager<IdentityUser> userManager, NoteHeader nh, string body, string tags, string dMessage, bool send, bool linked)
-        {
-            if (nh.ResponseOrdinal == 0)  // base note
-            {
-                nh.NoteOrdinal = await NextBaseNoteOrdinal(db, nh.NoteFileId, nh.ArchiveId);
-            }
-
-            if (!linked)
-            {
-                nh.LinkGuid = Guid.NewGuid().ToString();
-            }
-
-            if (!send) // indicates an import operation / adjust time to UCT / assume original was CST = UCT-06, so add 6 hours
-            {
-                int offset = 6;
-                if (nh.LastEdited.IsDaylightSavingTime())
-                    offset--;
-
-                Random rand = new Random();
-                int ms = rand.Next(999);
-
-                nh.LastEdited = nh.LastEdited.AddHours(offset).AddMilliseconds(ms);
-                nh.CreateDate = nh.LastEdited;
-                nh.ThreadLastEdited = nh.CreateDate;
-            }
-
-            NoteFile nf = await db.NoteFile
-                .Where(p => p.Id == nh.NoteFileId)
-                .FirstOrDefaultAsync();
-
-            nf.LastEdited = nh.CreateDate;
-            db.Entry(nf).State = EntityState.Modified;
-            db.NoteHeader.Add(nh);
-            await db.SaveChangesAsync();
-
-            NoteHeader newHeader = nh;
-
-            if (newHeader.ResponseOrdinal == 0)
-            {
-                newHeader.BaseNoteId = newHeader.Id;
-                db.Entry(newHeader).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-            }
-            else
-            {
-                NoteHeader baseNote = await db.NoteHeader
-                    .Where(p => p.NoteFileId == newHeader.NoteFileId && p.ArchiveId == newHeader.ArchiveId && p.NoteOrdinal == newHeader.NoteOrdinal && p.ResponseOrdinal == 0)
-                    .FirstOrDefaultAsync();
-
-                newHeader.BaseNoteId = baseNote.Id;
-                db.Entry(newHeader).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
-            }
-
-            NoteContent newContent = new NoteContent()
-            {
-                NoteHeaderId = newHeader.Id,
-                NoteBody = body,
-                DirectorMessage = dMessage
-            };
-            db.NoteContent.Add(newContent);
-            await db.SaveChangesAsync();
-
-            // deal with tags
-
-            if (tags != null && tags.Length > 1)
-            {
-                var theTags = Tags.StringToList(tags, newHeader.Id, newHeader.NoteFileId, newHeader.ArchiveId);
-
-                if (theTags.Count > 0)
-                {
-                    await db.Tags.AddRangeAsync(theTags);
-                    await db.SaveChangesAsync();
-                }
-            }
-
-            // Check for linked notefile(s)
-
-            List<LinkedFile> links = await db.LinkedFile.Where(p => p.HomeFileId == newHeader.NoteFileId && p.SendTo).ToListAsync();
-
-            if (linked || links == null || links.Count < 1)
-            {
-
-            }
-            else
-            {
-                foreach (var link in links)
-                {
-                    if (link.SendTo)
-                    {
-                        LinkQueue q = new LinkQueue
-                        {
-                            Activity = newHeader.ResponseOrdinal == 0 ? LinkAction.CreateBase : LinkAction.CreateResponse,
-                            LinkGuid = newHeader.LinkGuid,
-                            LinkedFileId = newHeader.NoteFileId,
-                            BaseUri = link.RemoteBaseUri
-                        };
-
-                        //TODO!!
-                        db.LinkQueue.Add(q);
-                        await db.SaveChangesAsync();
-
-
-                        //    LinkProcessor lp = new LinkProcessor(db);
-                        //    BackgroundJob.Enqueue(() => lp.ProcessLinkAction(q.Id));
-                    }
-                }
-            }
-
-            /////
-            ///
-
-            //TODO!! every place this method it called we need to do the below
-            //if (send && !linked)
-            //    await SendNewNoteToSubscribers(db, userManager, newHeader);
-
-            ////
-
-            return newHeader;
-        }
-
-
-
-        public static async Task<NoteHeader> CreateResponse(ApplicationDbContext db, UserManager<IdentityUser> userManager, NoteHeader nh, string body, string tags, string dMessage, bool send, bool linked)
-        {
-            NoteHeader mine = await GetBaseNoteHeader(db, nh.BaseNoteId);
-            db.Entry(mine).State = EntityState.Unchanged;
-            await db.SaveChangesAsync();
-
-            mine.ThreadLastEdited = DateTime.Now.ToUniversalTime();
-            mine.ResponseCount++;
-
-            db.Entry(mine).State = EntityState.Modified;
-            await db.SaveChangesAsync();
-
-            nh.ResponseOrdinal = mine.ResponseCount;
-            nh.NoteOrdinal = mine.NoteOrdinal;
-            return await CreateNote(db, userManager, nh, body, tags, dMessage, send, linked);
-        }
 
 
         public static async Task<bool> SendNotesAsync(ForwardViewModel fv, ApplicationDbContext db, IEmailSender emailSender,
@@ -651,134 +846,6 @@ namespace Notes2021Lib.Manager
         }
 
         /// <summary>
-        /// Delete a Note
-        /// </summary>
-        /// <param name="db">ApplicationDbContext</param>
-        /// <param name="nc">NoteContent</param>
-        /// <returns></returns>
-        public static async Task<bool> DeleteNote(ApplicationDbContext db, NoteHeader nc)
-        {
-            if (nc.ResponseOrdinal == 0)     // base note
-            {
-                return await DeleteBaseNote(db, nc);
-            }
-            else  // Response
-            {
-                return await DeleteResponse(db, nc);
-            }
-        }
-
-        /// <summary>
-        /// Delete a Base Note
-        /// </summary>
-        /// <param name="db">ApplicationDbContext</param>
-        /// <param name="nc">NoteContent</param>
-        /// <returns></returns>
-        // Steps involved:
-        // 1. Delete all NoteContent rows where NoteFileID, NoteOrdinal match input
-        // 2. Delete single row in BaseNoteHeader where NoteFileID, NoteOrdinal match input
-        // 3. Decrement all BaseNoteHeader.NoteOrdinal where NoteFileID match input and
-        //    BaseNoteHeader.NoteOrdinal > nc.NoteOrdinal
-        // 4. Decrement all NoteContent.NoteOrdinal where NoteFileID match input and NoteContent.NoteOrdinal > nc.NoteOrdinal
-        private static async Task<bool> DeleteBaseNote(ApplicationDbContext db, NoteHeader nc)
-        {
-            int fileId = nc.NoteFileId;
-            int arcId = nc.ArchiveId;
-            int noteOrd = nc.NoteOrdinal;
-
-            try
-            {
-                //NoteHeader deleteBase = await GetBaseNoteHeader(db, fileId, noteOrd);
-                List<NoteHeader> deleteCont = await GetNoteContentList(db, fileId, arcId, noteOrd);
-
-                foreach (var nh in deleteCont)
-                {
-                    await DeleteLinked(db, nh);
-                }
-
-
-                db.NoteHeader.RemoveRange(deleteCont);
-
-                List<NoteHeader> upBase = await db.NoteHeader
-                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal > noteOrd)
-                    .ToListAsync();
-
-                foreach (var cont in upBase)
-                {
-                    cont.NoteOrdinal--;
-                    db.Entry(cont).State = EntityState.Modified;
-                }
-
-                await db.SaveChangesAsync();
-
-                return true;
-            }
-            catch
-            {
-                // ignored
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Delete a Response Note
-        /// </summary>
-        /// <param name="db">ApplicationDbContext</param>
-        /// <param name="nc">NoteContent</param>
-        /// <returns></returns>
-        // Steps involved:
-        // 1. Delete single NoteContent row where NoteFileID, NoteOrdinal, and ResponseOrdinal match input
-        // 2. Decrement all NoteContent.ResponseOrdinal where NoteFileID, and NoteOrdinal match input and NoteContent.ResponseOrdinal > nc.ResponseOrdinal
-        // 3. Decrement single row (Responses field)in BaseNoteHeader where NoteFileID, NoteOrdinal match input
-        private static async Task<bool> DeleteResponse(ApplicationDbContext db, NoteHeader nc)
-        {
-            int fileId = nc.NoteFileId;
-            int arcId = nc.ArchiveId;
-            int noteOrd = nc.NoteOrdinal;
-            int respOrd = nc.ResponseOrdinal;
-
-            try
-            {
-                List<NoteHeader> deleteCont = await db.NoteHeader
-                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal == noteOrd && p.ResponseOrdinal == nc.ResponseOrdinal)
-                    .ToListAsync();
-
-                if (deleteCont.Count != 1)
-                    return false;
-
-                await DeleteLinked(db, deleteCont.First());
-
-                db.NoteHeader.Remove(deleteCont.First());
-
-                List<NoteHeader> upCont = await db.NoteHeader
-                    .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal == noteOrd && p.ResponseOrdinal > respOrd)
-                    .ToListAsync();
-
-                foreach (var cont in upCont)
-                {
-                    cont.ResponseOrdinal--;
-                    db.Entry(cont).State = EntityState.Modified;
-                }
-
-                NoteHeader bnh = await GetBaseNoteHeader(db, fileId, arcId, noteOrd);
-
-                bnh.ResponseCount--;
-                db.Entry(bnh).State = EntityState.Modified;
-
-                await db.SaveChangesAsync();
-
-                return true;
-            }
-            catch
-            {
-                // ignored
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Get the BaseNoteHeader in a given file with given ordinal
         /// </summary>
         /// <param name="db">ApplicationDbContext</param>
@@ -790,64 +857,6 @@ namespace Notes2021Lib.Manager
             return await db.NoteHeader
                                 .Where(p => p.NoteFileId == fileId && p.ArchiveId == arcId && p.NoteOrdinal == noteOrd && p.ResponseOrdinal == 0)
                                 .FirstOrDefaultAsync();
-        }
-
-
-
-        public static async Task<string> DeleteLinked(ApplicationDbContext db, NoteHeader nh)
-        {
-            // Check for linked notefile(s)
-
-            List<LinkedFile> links = await db.LinkedFile.Where(p => p.HomeFileId == nh.NoteFileId).ToListAsync();
-
-            if (links == null || links.Count < 1)
-            {
-
-            }
-            else
-            {
-                foreach (var link in links)
-                {
-                    if (link.SendTo)
-                    {
-                        LinkQueue q = new LinkQueue
-                        {
-                            Activity = LinkAction.Delete,
-                            LinkGuid = nh.LinkGuid,
-                            LinkedFileId = nh.NoteFileId,
-                            BaseUri = link.RemoteBaseUri
-                        };
-
-                        db.LinkQueue.Add(q);
-                        await db.SaveChangesAsync();
-
-                        //TODO!!
-                        //LinkProcessor lp = new LinkProcessor(db); 
-                        //BackgroundJob.Enqueue(() => lp.ProcessLinkDelete(q.Id));
-                    }
-                }
-            }
-
-            return "Ok";
-        }
-
-        public static async Task<NoteContent> GetNoteContent(ApplicationDbContext db, int nfid, int ArcId, int noteord, int respOrd)
-        {
-            var header = await db.NoteHeader
-                .Where(p => p.NoteFileId == nfid && p.ArchiveId == ArcId && p.NoteOrdinal == noteord && p.ResponseOrdinal == respOrd)
-                .FirstAsync();
-
-            if (header == null)
-                return null;
-
-            var content = await db.NoteContent
-                .OfType<NoteContent>()
-                .Where(p => p.NoteHeaderId == header.Id)
-                .FirstAsync();
-
-            content.NoteHeader = null;
-
-            return content;
         }
 
 
@@ -992,38 +1001,6 @@ namespace Notes2021Lib.Manager
             return await db.NoteFile
                 .OrderBy(p => p.NoteFileName)
                 .ToListAsync();
-        }
-
-        public static void ArchiveNoteFile(ApplicationDbContext _db, NoteFile noteFile)
-        {
-            noteFile.NumberArchives++;
-            _db.Update(noteFile);
-
-            List<NoteHeader> nhl = _db.NoteHeader.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
-
-            foreach (NoteHeader nh in nhl)
-            {
-                nh.ArchiveId = noteFile.NumberArchives;
-                _db.Update(nh);
-            }
-
-            List<NoteAccess> nal = _db.NoteAccess.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
-            foreach (NoteAccess na in nal)
-            {
-                na.ArchiveId = noteFile.NumberArchives;
-            }
-            _db.NoteAccess.AddRange(nal);
-
-            List<Tags> ntl = _db.Tags.Where(p => p.NoteFileId == noteFile.Id && p.ArchiveId == 0).ToList();
-            foreach (Tags nt in ntl)
-            {
-                nt.ArchiveId = noteFile.NumberArchives;
-                _db.Update(nt);
-            }
-
-
-            _db.SaveChanges();
-
         }
 
 
