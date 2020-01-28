@@ -17,6 +17,7 @@ namespace Notes2021Client
         public Login()
         {
             InitializeComponent();
+            textBoxEmail.Text = Program.DefaultLogin;
         }
 
         private void Login_KeyUp(object sender, KeyEventArgs e)
@@ -62,6 +63,11 @@ namespace Notes2021Client
         private void Login_Load(object sender, EventArgs e)
         {
             linkLabel1.Text = Program.MyClient.BaseAddress.ToString();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
         }
     }
 }

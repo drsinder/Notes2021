@@ -802,6 +802,7 @@
             this.Controls.Add(this.ToolStrip1);
             this.Name = "CreateNote";
             this.Text = "Create Note";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.MenuStrip1.ResumeLayout(false);
             this.MenuStrip1.PerformLayout(); this.ResumeLayout(false);
             this.ToolStrip1.ResumeLayout(false);

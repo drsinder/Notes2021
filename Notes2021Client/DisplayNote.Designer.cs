@@ -267,7 +267,7 @@
             this.Controls.Add(this.webBrowserPrint);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DisplayNote";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DisplayNote";
             this.ResumeLayout(false);
             this.PerformLayout();

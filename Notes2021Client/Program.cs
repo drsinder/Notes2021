@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Notes2021Client
         public static readonly HttpClient MyClient = new HttpClient();
         public static string AuthToken;
         public static string baseUri;
+        public static string DefaultLogin = string.Empty;
 
         /// <summary>
         ///  The main entry point for the application.
@@ -19,8 +21,12 @@ namespace Notes2021Client
         [STAThread]
         static void Main()
         {
-            baseUri = "https://www.drsinder.com:444/notes2021/";                   //Settings.Default.BaseURI;
-            //baseUri = "";
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+
+            DefaultLogin = config["DefaultLogin"];
+            baseUri = config["Server"];
             MyClient.BaseAddress = new Uri(baseUri);
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);

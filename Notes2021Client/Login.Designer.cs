@@ -46,7 +46,6 @@
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new System.Drawing.Size(245, 23);
             this.textBoxEmail.TabIndex = 0;
-            this.textBoxEmail.Text = "sinder@illinois.edu";
             // 
             // label1
             // 
@@ -113,6 +112,7 @@
             this.linkLabel1.TabIndex = 7;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "https://www.drsinder.com/notes2021/";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // Login
             // 
