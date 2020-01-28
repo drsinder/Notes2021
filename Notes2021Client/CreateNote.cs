@@ -29,6 +29,8 @@ namespace Notes2021Client
         public CreateNote(NoteFile myfile, long baseId, NoteHeader noteHeader, NoteContent noteContent, IEnumerable<Tags> noteTags, IRelistAble myParent)
         {
             InitializeComponent();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmReplace));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 
             currentFile = "";
 
