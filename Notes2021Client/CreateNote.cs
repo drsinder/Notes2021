@@ -768,8 +768,8 @@ namespace Notes2021Client
         {
             try
             {
-                //frmReplace f = new frmReplace(this);
-                //f.Show();
+                frmReplace f = new frmReplace(this);
+                f.Show();
             }
             catch (Exception ex)
             {
